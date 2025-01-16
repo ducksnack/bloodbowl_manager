@@ -86,12 +86,16 @@ class Player(models.Model):
         default='Active',
     )
     miss_next = models.BooleanField(default=False)
-    injuries = models.CharField(max_length=100, default="")
+    # injuries = models.CharField(max_length=100, default="")
     # pass_completions = models.IntegerField(default=0)
     # touchdowns = models.IntegerField(default=0)
     # interceptions = models.IntegerField(default=0)
     # casualties = models.IntegerField(default=0)
     # mvps = models.IntegerField(default=0)
+
+    def get_injuries(self):
+        injuries = self.player_injuries.filter(match__status="completed")
+        return injuries
 
     def get_n_completions(self):
         n_pcs = self.thrower_completions.filter(match__status="completed").count()
@@ -113,22 +117,34 @@ class Player(models.Model):
         n_mvps =  self.player_mvps.filter(match__status="completed").count()
         return n_mvps
     
-    """
-    def initialize_stats_from_player_type(self):
-        # Sets initial stats based on the associated PlayerType.
-        self.position = self.player_type.position
-        self.value = self.player_type.price
-        self.strength = self.player_type.strength
-        self.agility = self.player_type.agility
-        self.movement = self.player_type.movement
-        self.armour = self.player_type.armour
-        self.skills = self.player_type.starting_skills
-        self.normal_skill_access = self.player_type.normal_skill_access
-        self.double_skill_access = self.player_type.double_skill_access
-    """
     def calculate_spp(self):
         spp = 1 * self.get_n_completions() + 3 * self.get_n_touchdowns() + 2 * self.get_n_interceptions() + 2 * self.get_n_casualties() + 5 * self.get_n_mvps()
         return spp
+    
+    def get_stats(self):
+        base_ma = self.player_type.movement
+        base_st = self.player_type.strength
+        base_ag = self.player_type.agility
+        base_av = self.player_type.armour
+        ma_modifier = 0
+        st_modifier = 0
+        ag_modifier = 0
+        av_modifier = 0
+        injuries = self.get_injuries()
+        for injury in injuries:
+            ma_modifier += injury.ma_modifier
+            st_modifier += injury.st_modifier
+            ag_modifier += injury.ag_modifier
+            av_modifier += injury.av_modifier
+
+        ma = base_ma + ma_modifier
+        st = base_st + st_modifier
+        ag = base_ag + ag_modifier
+        av = base_av + av_modifier
+
+        return (ma,st,ag,av)
+
+
     """
     def save(self, *args, **kwargs):
         # Ensure the stats are initialized from player_type before saving
@@ -219,3 +235,18 @@ class MostValuablePlayer(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='match_mvps')
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_mvps')
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_mvps', null=True)
+
+class InjuryType(models.Model):
+    name = models.CharField(max_length=25)
+    ma_modifier = models.IntegerField(default=0)
+    st_modifier = models.IntegerField(default=0)
+    ag_modifier = models.IntegerField(default=0)
+    av_modifier = models.IntegerField(default=0)
+    dead = models.BooleanField(default=False)
+
+class Injury(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="_match_injuries")
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player_injuries")
+    injury_type = models.ForeignKey(InjuryType, on_delete=models.CASCADE)
+
+
