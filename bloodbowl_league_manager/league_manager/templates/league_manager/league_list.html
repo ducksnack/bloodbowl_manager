@@ -1,0 +1,19 @@
+<h1>Leagues</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Manager</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for league in leagues %}
+            <tr>
+                <td><a href="{% url 'league_details' league.id %}">{{ league.name }}</a></td>
+                <td>{{ league.managers }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{% url 'index' %}">Back to Home</a></p>

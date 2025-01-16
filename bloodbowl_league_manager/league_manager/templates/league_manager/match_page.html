@@ -1,0 +1,70 @@
+<h1>{{ team1.name }} vs. {{ team2.name }}</h1>
+<h1>{{ team1_score }} - {{ team2_score }}</h1>
+
+<!-- TOUCHDOWNS -->
+<h2>Team1 Touchdowns</h2>
+{% for td in team1_touchdowns %}
+    <p>{{ td.player.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_touchdown' match.id team1.id %}">Add Team1 Touchdown</a></p>
+{% endif %}
+
+<h2>Team2 Touchdowns</h2>
+{% for td in team2_touchdowns %}
+    <p>{{ td.player.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_touchdown' match.id team2.id %}">Add Team2 Touchdown</a></p>
+{% endif %}
+
+<!-- COMPLETIONS -->
+<h2>Team1 Completions</h2>
+{% for comp in team1_completions %}
+    <p>{{ comp.thrower.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_completion' match.id team1.id %}">Add Team1 Completion</a></p>
+{% endif %}
+
+<h2>Team2 Completions</h2>
+{% for comp in team2_completions %}
+    <p>{{ comp.thrower.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_completion' match.id team2.id %}">Add Team2 Completion</a></p>
+{% endif %}
+
+<!-- CASUALTIES -->
+<h2>Team1 Casualties</h2>
+{% for cas in team1_casualties %}
+    <p>{{ cas.causing_player.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_casualty' match.id team1.id %}">Add Team1 Completion</a></p>
+{% endif %}
+
+<h2>Team2 Casualties</h2>
+{% for cas in team2_casualties %}
+    <p>{{ comp.causing_player.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_casualty' match.id team2.id %}">Add Team2 Completion</a></p>
+{% endif %}
+
+
+{% if in_progress %}
+    <p><a href="{% url 'end_match' match.id %}">End Match</a></p>
+{% endif %}
+
+<p><a href="{% url 'league_details' league.id %}">Leave Match</a></p>
+
+{% if in_progress %}
+    <p><a href="{% url 'cancel_match' match.id %}">Cancel Match</a></p>
+{% endif %}

@@ -1,0 +1,10 @@
+<h2>Modify Team</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'team_details' team.id %}">
+        <button type="button">Cancel</button>
+    </a>
+</form>

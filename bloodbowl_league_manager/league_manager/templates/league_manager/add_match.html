@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>League Page</title>
+</head>
+<body>
+    <h1>Add Match to {{ league_name }}</h1>
+    
+    <select id="team1" class="team_selector_dropdown">
+        <option value="">Select Team 1</option>
+        {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.name }}</option>
+        {% endfor %}
+    </select>
+    
+    <br>
+    
+    <select id="team2" class="team_selector_dropdown">
+        <option value="">Select Team 2</option>
+        {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Start Match link -->
+    <a id="start-match-link" href="#">Start Match</a>
+
+    <script>
+        const team1Dropdown = document.getElementById('team1');
+        const team2Dropdown = document.getElementById('team2');
+        const startMatchLink = document.getElementById('start-match-link');
+        const leagueId = {{ league_id|escapejs }}; // Pass the league ID from the template
+    
+        // Function to update the href of the Start Match link
+        function updateStartMatchLink() {
+            const team1Id = team1Dropdown.value;
+            const team2Id = team2Dropdown.value;
+    
+            if (team1Id && team2Id) { // Ensure both teams are selected
+                // Use template literals to construct the URL
+                startMatchLink.href = `/leagues/start_match/${leagueId}/${team1Id}/${team2Id}/`;
+            } else {
+                startMatchLink.href = '#'; // Disable the link if teams are not selected
+            }
+        }
+    
+        // Add event listeners to dropdowns
+        team1Dropdown.addEventListener('change', updateStartMatchLink);
+        team2Dropdown.addEventListener('change', updateStartMatchLink);
+    </script>
+</body>
+</html>

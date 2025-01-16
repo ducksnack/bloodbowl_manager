@@ -1,0 +1,19 @@
+<h1>Adding Completion for {{ team.name }} in match {{ match.id }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="thrower_id">Select Thrower</label>
+    <select name="thrower_id" id="thrower_id">
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+    <label for="receiver_id">Select Receiver</label>
+    <select name="receiver_id" id="receiver_id">
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Completion</button>
+</form>

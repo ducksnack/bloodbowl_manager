@@ -1,0 +1,75 @@
+<h1>{{ league.name }}</h1>
+<p><strong>Manager:</strong> {{ league.managers }}</p>
+
+<h2>Teams in this league</h2>
+<p><a href="{% url 'leagues' %}">Back to Leagues</a></p>
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Games Won</th>
+            <th>Games Lost</th>
+            <th>Games Drawn</th>
+            <th>Points</th>
+            <th>TDs Scored</th>
+            <th>TDs Against</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in team_stats %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{% url 'team_details' team.team_id %}">{{ team.name }}</a></td>
+                <td>{{ team.n_wins }}</td>
+                <td>{{ team.n_lost }}</td>
+                <td>{{ team.n_draws }}</td>
+                <td>{{ team.points }}</td>
+                <td>{{ team.tds_scored }}</td>
+                <td>{{ team.tds_against }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p><a href="{% url 'add_match' league.id %}">Record Match</a></p>
+
+
+<h2>Matches in progress</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Teams</th>
+            <th>Score</th>
+            <th>Resume</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in matches_in_progress %}
+            <tr>
+                <td>{{ match.team1 }} vs. {{ match.team2 }}</td>
+                <td>{{ match.get_score }}</td>
+                <td><a href="{% url 'match_page' match.id %}">Resume</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Completed Matches</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Teams</th>
+            <th>Score</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in matches_completed %}
+            <tr>
+                <td>{{ match.team1 }} vs. {{ match.team2 }}</td>
+                <td>{{ match.get_score }}</td>
+                <td><a href="{% url 'match_page' match.id %}">View</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

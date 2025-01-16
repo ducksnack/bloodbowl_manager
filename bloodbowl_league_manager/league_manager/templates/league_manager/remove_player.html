@@ -1,0 +1,12 @@
+<h1>Remove Player: {{ player.name }}</h1>
+
+<p>What is the reason for removing this player?</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" name="status" value="Retired">Retired</button>
+    <button type="submit" name="status" value="Dead">Dead</button>
+    <a href="{% url 'team_details' team_id=player.team.id %}">
+        <button type="button">Cancel</button>
+    </a>
+</form>

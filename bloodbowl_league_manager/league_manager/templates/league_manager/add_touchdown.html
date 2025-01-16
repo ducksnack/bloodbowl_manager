@@ -1,0 +1,13 @@
+<h1>Adding Touchdown for {{ team.name }} in match {{ match.id }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="player_id">Select Player</label>
+    <select name="player_id" id="player_id">
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Touchdown</button>
+</form>
