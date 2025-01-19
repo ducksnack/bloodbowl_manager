@@ -46,7 +46,7 @@
 {% endfor %}
 
 {% if in_progress %}
-    <p><a href="{% url 'add_casualty' match.id team1.id %}">Add Team1 Completion</a></p>
+    <p><a href="{% url 'add_casualty' match.id team1.id %}">Add Team1 Casualty</a></p>
 {% endif %}
 
 <h2>Team2 Casualties</h2>
@@ -55,7 +55,7 @@
 {% endfor %}
 
 {% if in_progress %}
-    <p><a href="{% url 'add_casualty' match.id team2.id %}">Add Team2 Completion</a></p>
+    <p><a href="{% url 'add_casualty' match.id team2.id %}">Add Team2 Casualty</a></p>
 {% endif %}
 
 

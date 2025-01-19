@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer
+from .models import Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury
 from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm
 from django.db.models import Count, Q, F
 
@@ -291,6 +291,7 @@ def add_completion(request, match_id, team_id):
 def add_casualty(request, match_id, team_id):
     match = get_object_or_404(Match, id=match_id)
     team = get_object_or_404(Team, id=team_id)
+    injury_types = InjuryType.objects.all()
 
     players = team.players.all()
     opposing_team = match.team1 if match.team2 == team else match.team2
@@ -301,8 +302,11 @@ def add_casualty(request, match_id, team_id):
         causing_player = get_object_or_404(Player, id=causing_player_id)
         victim_player_id = request.POST.get('victim_player_id')
         victim_player = get_object_or_404(Player, id=victim_player_id)
+        injury_type_id = request.POST.get('injury_type_id')
+        injury_type = get_object_or_404(InjuryType, id=injury_type_id)
 
         Casualty.objects.create(match=match, causing_player=causing_player, victim_player=victim_player, causing_team=team, victim_team=opposing_team)
+        Injury.objects.create(match=match, player=victim_player, injury_type=injury_type)
 
         return redirect('match_page', match_id=match_id)
     
@@ -311,6 +315,7 @@ def add_casualty(request, match_id, team_id):
         'match':match,
         'players':players,
         'opposing_players':opposing_players,
+        'injury_types': injury_types
     }
     
     return render(request, 'league_manager/add_casualty.html', context)

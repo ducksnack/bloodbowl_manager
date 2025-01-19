@@ -132,17 +132,17 @@ class Player(models.Model):
         av_modifier = 0
         injuries = self.get_injuries()
         for injury in injuries:
-            ma_modifier += injury.ma_modifier
-            st_modifier += injury.st_modifier
-            ag_modifier += injury.ag_modifier
-            av_modifier += injury.av_modifier
+            ma_modifier += injury.injury_type.ma_modifier
+            st_modifier += injury.injury_type.st_modifier
+            ag_modifier += injury.injury_type.ag_modifier
+            av_modifier += injury.injury_type.av_modifier
 
         ma = base_ma + ma_modifier
         st = base_st + st_modifier
         ag = base_ag + ag_modifier
         av = base_av + av_modifier
 
-        return (ma,st,ag,av)
+        return {"movement":ma, "strength":st, "agility":ag, "armour":av}
 
 
     """
@@ -238,14 +238,19 @@ class MostValuablePlayer(models.Model):
 
 class InjuryType(models.Model):
     name = models.CharField(max_length=25)
+    niggling = models.BooleanField(default=False)
     ma_modifier = models.IntegerField(default=0)
     st_modifier = models.IntegerField(default=0)
     ag_modifier = models.IntegerField(default=0)
     av_modifier = models.IntegerField(default=0)
     dead = models.BooleanField(default=False)
+    description = models.CharField(max_length=20, default="-")
+
+    def __str__(self):
+        return f'{self.name} [{self.description}]'
 
 class Injury(models.Model):
-    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="_match_injuries")
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="match_injuries")
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player_injuries")
     injury_type = models.ForeignKey(InjuryType, on_delete=models.CASCADE)
 
