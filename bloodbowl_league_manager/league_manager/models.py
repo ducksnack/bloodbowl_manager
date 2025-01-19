@@ -166,6 +166,13 @@ class Match(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE, related_name='matches')
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='matches_as_team1')
     team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='matches_as_team2')
+    team1_fame = models.IntegerField(default=0)
+    team2_fame = models.IntegerField(default=0)
+    weather = models.CharField(max_length=20, default="nice")
+    team1_winnings = models.IntegerField(default=0)
+    team2_winnings = models.IntegerField(default=0)
+    team1_fanfactor_change = models.IntegerField(default=0)
+    team1_fanfactor_change = models.IntegerField(default=0)
     status = models.CharField(max_length=15,
                               choices=STATUS_CHOICES,
                               default='in_progress')

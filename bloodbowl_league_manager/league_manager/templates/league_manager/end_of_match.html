@@ -1,0 +1,26 @@
+<h1>End Game Sequence for {{ team1.name }} vs. {{ team2.name }}</h1>
+<h1>Final score: {{ team1_score }} - {{ team2_score }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="causing_player_id">Select Inflicter</label>
+    <select name="causing_player_id" id="causing_player_id">
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+    <label for="victim_player_id">Select Victim</label>
+    <select name="victim_player_id" id="victim_player_id">
+        {% for player in opposing_players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+    <label for="injury_type_id">Select Injury</label>
+    <select name="injury_type_id" id="injury_type_id">
+        {% for injury in injury_types %}
+            <option value="{{ injury.id }}">{{ injury.name }} [{{ injury.description }}]</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Submit Match Result</button>
+</form>

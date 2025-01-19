@@ -221,18 +221,41 @@ def get_team_value(request, team_id):
     team = get_object_or_404(Team, id=team_id)
     return JsonResponse({'team_value': team.get_total_team_value()})
 
-def start_match(request, league_id, team1_id, team2_id):
+def start_match(request, league_id, team1_id, team2_id, team1_fame, team2_fame, weather):
     
-    match = Match.objects.create(league_id=league_id, team1_id=team1_id, team2_id=team2_id)
+    match = Match.objects.create(league_id=league_id, team1_id=team1_id, team2_id=team2_id, team1_fame=team1_fame, team2_fame=team2_fame, weather=weather)
     return redirect('match_page', match_id=match.id)
 
 def end_match(request, match_id):
     
     match = get_object_or_404(Match, id=match_id)
-    match.status = "completed"
-    match.save()
+    if request.method == "POST":
+        match.team1_winnings = request.POST.get('team1_winnings')
+        match.team2_winnings = request.POST.get('team2_winnings')
+        team1_mvp = get_object_or_404(Player, id=team1_mvp_id)
+        team1_mvp_obj = MostValuablePlayer.objects.create(match=match, player=team1_mvp, team=team1_mvp.team)
+        team2_mvp = get_object_or_404(Player, id=team2_mvp_id)
+        team2_mvp_obj = MostValuablePlayer.objects.create(match=match, player=team2_mvp, team=team2_mvp.team)
+        match.team1_fanfactor_change = request.POST.get('team1_fanfactor_change')
+        match.team2_fanfactor_change = request.POST.get('team2_fanfactor_change')
+        match.team1.players.filter(miss_next_game=True).update(miss_next_game=False)
+        match.team1.players.filter(miss_next_game=True).update(miss_next_game=False)
+        match.status = "completed"
+        match.save()
 
-    return redirect('league_details', league_id=match.league.id)
+        return redirect('league_details', league_id=match.league.id)
+
+    team1 = match.team1
+    team2 = match.team2
+    team1_score = match.get_score()[0]
+    team2_score = match.get_score()[1]
+    context = {"team1":team1,
+               "team2":team2,
+               "team1_score":team1_score,
+               "team2_score":team2_score,
+               }
+
+    return render(request, 'end_of_match.html', context)
 
 def cancel_match(request, match_id):
     
