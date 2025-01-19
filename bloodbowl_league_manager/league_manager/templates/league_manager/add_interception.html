@@ -1,0 +1,19 @@
+<h1>Adding Interception for {{ team.name }} in match {{ match.id }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="intercepting_player_id">Select Interceptor</label>
+    <select name="intercepting_player_id" id="intercepting_player_id">
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+    <label for="throwing_player_id">Select Thrower</label>
+    <select name="throwing_player_id" id="throwing_player_id">
+        {% for player in opposing_players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Interception</button>
+</form>

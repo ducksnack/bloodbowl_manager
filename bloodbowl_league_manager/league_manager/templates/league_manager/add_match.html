@@ -13,6 +13,8 @@
             <option value="{{ team.id }}">{{ team.name }}</option>
         {% endfor %}
     </select>
+
+    <p id="team1_value">Team Value:</p>
     
     <br>
     
@@ -23,6 +25,35 @@
         {% endfor %}
     </select>
 
+    <p id="team2_value">Team Value:</p>
+
+    <br>
+
+    <label for="weather_dropdown">Select Weather</label>
+    <select name="weather_dropdown" id="weather_dropdown_id">
+        <option value="sweltering_heat">Sweltering Heat</option>
+        <option value="very_sunny">Very Sunny</option>
+        <option value="nice" selected>Nice</option>
+        <option value="pouring_rain">Pouring Rain</option>
+        <option value="blizzard">Blizzard</option>
+    </select>
+
+    <label for="team1_fame">Team1 FAME:</label>
+    <select name="team1_fame" id="team1_fame_id">
+        <option value=0 selected>0</option>
+        <option value=1>+1</option>
+        <option value=2>+2</option>
+    </select>
+
+    <label for="team2_fame">Team2 FAME:</label>
+    <select name="team2_fame" id="team2_fame_id">
+        <option value=0 selected>0</option>
+        <option value=1>+1</option>
+        <option value=2>+2</option>
+    </select>
+
+    <br>
+
     <!-- Start Match link -->
     <a id="start-match-link" href="#">Start Match</a>
 
@@ -30,13 +61,15 @@
         const team1Dropdown = document.getElementById('team1');
         const team2Dropdown = document.getElementById('team2');
         const startMatchLink = document.getElementById('start-match-link');
+        const team1ValueParagraph = document.getElementById('team1_value');
+        const team2ValueParagraph = document.getElementById('team2_value');
         const leagueId = {{ league_id|escapejs }}; // Pass the league ID from the template
-    
+
         // Function to update the href of the Start Match link
         function updateStartMatchLink() {
             const team1Id = team1Dropdown.value;
             const team2Id = team2Dropdown.value;
-    
+
             if (team1Id && team2Id) { // Ensure both teams are selected
                 // Use template literals to construct the URL
                 startMatchLink.href = `/leagues/start_match/${leagueId}/${team1Id}/${team2Id}/`;
@@ -44,10 +77,34 @@
                 startMatchLink.href = '#'; // Disable the link if teams are not selected
             }
         }
-    
-        // Add event listeners to dropdowns
-        team1Dropdown.addEventListener('change', updateStartMatchLink);
-        team2Dropdown.addEventListener('change', updateStartMatchLink);
+
+        // Function to fetch team value and update paragraph
+        function updateTeamValue(teamId, paragraph) {
+            if (teamId) {
+                fetch(`/teams/${teamId}/get_team_value/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        paragraph.textContent = `Team Value: ${data.team_value}`;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching team value:', error);
+                        paragraph.textContent = 'Team Value: Error fetching value';
+                    });
+            } else {
+                paragraph.textContent = 'Team Value: ';
+            }
+        }
+
+        // Add event listeners to dropdowns to update team value and link
+        team1Dropdown.addEventListener('change', () => {
+            updateTeamValue(team1Dropdown.value, team1ValueParagraph);
+            updateStartMatchLink();
+        });
+
+        team2Dropdown.addEventListener('change', () => {
+            updateTeamValue(team2Dropdown.value, team2ValueParagraph);
+            updateStartMatchLink();
+        });
     </script>
 </body>
 </html>

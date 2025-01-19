@@ -51,14 +51,33 @@
 
 <h2>Team2 Casualties</h2>
 {% for cas in team2_casualties %}
-    <p>{{ comp.causing_player.name }}</p>
+    <p>{{ cas.causing_player.name }}</p>
 {% endfor %}
 
 {% if in_progress %}
     <p><a href="{% url 'add_casualty' match.id team2.id %}">Add Team2 Casualty</a></p>
 {% endif %}
 
+<!-- INTERCEPTIONS -->
+<h2>Team1 Interceptions</h2>
+{% for int in team1_interceptions %}
+    <p>{{ int.intercepting_player.name }}</p>
+{% endfor %}
 
+{% if in_progress %}
+    <p><a href="{% url 'add_interception' match.id team1.id %}">Add Team1 Interception</a></p>
+{% endif %}
+
+<h2>Team2 Interceptions</h2>
+{% for int in team2_interceptions %}
+    <p>{{ int.intercepting_player.name }}</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_interception' match.id team2.id %}">Add Team2 Interception</a></p>
+{% endif %}
+
+<!-- MATCH BOTTM -->
 {% if in_progress %}
     <p><a href="{% url 'end_match' match.id %}">End Match</a></p>
 {% endif %}

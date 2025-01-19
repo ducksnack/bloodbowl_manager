@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from .models import Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury
 from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm
 from django.db.models import Count, Q, F
@@ -215,6 +216,11 @@ def start_match(request, league_id, team1_id, team2_id):
 
     return redirect('match_page', match_id=match.id)
 """
+
+def get_team_value(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    return JsonResponse({'team_value': team.get_total_team_value()})
+
 def start_match(request, league_id, team1_id, team2_id):
     
     match = Match.objects.create(league_id=league_id, team1_id=team1_id, team2_id=team2_id)
@@ -319,6 +325,33 @@ def add_casualty(request, match_id, team_id):
     }
     
     return render(request, 'league_manager/add_casualty.html', context)
+
+def add_interception(request, match_id, team_id):
+    match = get_object_or_404(Match, id=match_id)
+    team = get_object_or_404(Team, id=team_id)
+
+    players = team.players.all()
+    opposing_team = match.team1 if match.team2 == team else match.team2
+    opposing_players = opposing_team.players.all()
+
+    if request.method == 'POST':
+        intercepting_player_id = request.POST.get('intercepting_player_id')
+        intercepting_player = get_object_or_404(Player, id=intercepting_player_id)
+        throwing_player_id = request.POST.get('throwing_player_id')
+        throwing_player = get_object_or_404(Player, id=throwing_player_id)
+
+        Interception.objects.create(match=match, intercepting_player=intercepting_player, throwing_player=throwing_player, intercepting_team=team, throwing_team=opposing_team)
+
+        return redirect('match_page', match_id=match_id)
+    
+    context = {
+        'team':team,
+        'match':match,
+        'players':players,
+        'opposing_players':opposing_players,
+    }
+    
+    return render(request, 'league_manager/add_interception.html', context)
 
 def add_touchdown(request, match_id, team_id):
     # Get the match and team objects

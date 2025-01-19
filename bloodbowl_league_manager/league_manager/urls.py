@@ -20,4 +20,6 @@ urlpatterns = [
     path('cancel_match/<int:match_id>/', views.cancel_match, name='cancel_match'),
     path('add_completion/<int:match_id>/<int:team_id>/', views.add_completion, name='add_completion'),
     path('add_casualty/<int:match_id>/<int:team_id>/', views.add_casualty, name='add_casualty'),
+    path('add_interception/<int:match_id>/<int:team_id>/', views.add_interception, name='add_interception'),
+    path('teams/<int:team_id>/get_team_value/', views.get_team_value, name='get_team_value'),
 ]
