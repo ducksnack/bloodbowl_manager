@@ -60,24 +60,30 @@
     <script>
         const team1Dropdown = document.getElementById('team1');
         const team2Dropdown = document.getElementById('team2');
+        const team1FameDropdown = document.getElementById('team1_fame_id');
+        const team2FameDropdown = document.getElementById('team2_fame_id');
+        const weatherDropdown = document.getElementById('weather_dropdown_id');
         const startMatchLink = document.getElementById('start-match-link');
         const team1ValueParagraph = document.getElementById('team1_value');
         const team2ValueParagraph = document.getElementById('team2_value');
         const leagueId = {{ league_id|escapejs }}; // Pass the league ID from the template
-
+    
         // Function to update the href of the Start Match link
         function updateStartMatchLink() {
             const team1Id = team1Dropdown.value;
             const team2Id = team2Dropdown.value;
-
+            const team1Fame = team1FameDropdown.value;
+            const team2Fame = team2FameDropdown.value;
+            const weather = weatherDropdown.value;
+    
             if (team1Id && team2Id) { // Ensure both teams are selected
                 // Use template literals to construct the URL
-                startMatchLink.href = `/leagues/start_match/${leagueId}/${team1Id}/${team2Id}/`;
+                startMatchLink.href = `/leagues/start_match/${leagueId}/${team1Id}/${team2Id}/${team1Fame}/${team2Fame}/${weather}/`;
             } else {
                 startMatchLink.href = '#'; // Disable the link if teams are not selected
             }
         }
-
+    
         // Function to fetch team value and update paragraph
         function updateTeamValue(teamId, paragraph) {
             if (teamId) {
@@ -94,17 +100,21 @@
                 paragraph.textContent = 'Team Value: ';
             }
         }
-
+    
         // Add event listeners to dropdowns to update team value and link
         team1Dropdown.addEventListener('change', () => {
             updateTeamValue(team1Dropdown.value, team1ValueParagraph);
             updateStartMatchLink();
         });
-
+    
         team2Dropdown.addEventListener('change', () => {
             updateTeamValue(team2Dropdown.value, team2ValueParagraph);
             updateStartMatchLink();
         });
+    
+        team1FameDropdown.addEventListener('change', updateStartMatchLink);
+        team2FameDropdown.addEventListener('change', updateStartMatchLink);
+        weatherDropdown.addEventListener('change', updateStartMatchLink);
     </script>
 </body>
 </html>

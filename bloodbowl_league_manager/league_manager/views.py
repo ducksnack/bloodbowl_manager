@@ -247,15 +247,19 @@ def end_match(request, match_id):
 
     team1 = match.team1
     team2 = match.team2
+    team1_players = team1.players.all()
+    team2_players = team2.players.all()
     team1_score = match.get_score()[0]
     team2_score = match.get_score()[1]
     context = {"team1":team1,
                "team2":team2,
+               "team1_players": team1_players,
+               "team2_players": team2_players,
                "team1_score":team1_score,
                "team2_score":team2_score,
                }
 
-    return render(request, 'end_of_match.html', context)
+    return render(request, 'league_manager/end_of_match.html', context)
 
 def cancel_match(request, match_id):
     
