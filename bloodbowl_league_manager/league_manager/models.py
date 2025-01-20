@@ -172,7 +172,7 @@ class Match(models.Model):
     team1_winnings = models.IntegerField(default=0)
     team2_winnings = models.IntegerField(default=0)
     team1_fanfactor_change = models.IntegerField(default=0)
-    team1_fanfactor_change = models.IntegerField(default=0)
+    team2_fanfactor_change = models.IntegerField(default=0)
     status = models.CharField(max_length=15,
                               choices=STATUS_CHOICES,
                               default='in_progress')

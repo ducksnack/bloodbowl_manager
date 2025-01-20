@@ -229,17 +229,33 @@ def start_match(request, league_id, team1_id, team2_id, team1_fame, team2_fame, 
 def end_match(request, match_id):
     
     match = get_object_or_404(Match, id=match_id)
+    team1 = match.team1
+    team2 = match.team2
     if request.method == "POST":
-        match.team1_winnings = request.POST.get('team1_winnings')
-        match.team2_winnings = request.POST.get('team2_winnings')
-        team1_mvp = get_object_or_404(Player, id=team1_mvp_id)
+        team1_winnings = int(request.POST.get('team1_winnings'))
+        match.team1_winnings = team1_winnings
+        match.team1.treasury += team1_winnings
+        team2_winnings = int(request.POST.get('team2_winnings'))
+        match.team2_winnings = team2_winnings
+        match.team2.treasury += team2_winnings
+        team1_mvp = get_object_or_404(Player, id=request.POST.get('team1_mvp_id'))
         team1_mvp_obj = MostValuablePlayer.objects.create(match=match, player=team1_mvp, team=team1_mvp.team)
-        team2_mvp = get_object_or_404(Player, id=team2_mvp_id)
+        team2_mvp = get_object_or_404(Player, id=request.POST.get('team2_mvp_id'))
         team2_mvp_obj = MostValuablePlayer.objects.create(match=match, player=team2_mvp, team=team2_mvp.team)
-        match.team1_fanfactor_change = request.POST.get('team1_fanfactor_change')
-        match.team2_fanfactor_change = request.POST.get('team2_fanfactor_change')
-        match.team1.players.filter(miss_next_game=True).update(miss_next_game=False)
-        match.team1.players.filter(miss_next_game=True).update(miss_next_game=False)
+        team1_fanfactor_change = int(request.POST.get('team1_fanfactor_change'))
+        match.team1_fanfactor_change = team1_fanfactor_change
+        team1.fan_factor += team1_fanfactor_change
+        team2_fanfactor_change = int(request.POST.get('team2_fanfactor_change'))
+        match.team2_fanfactor_change = team2_fanfactor_change
+        team2.fan_factor += team2_fanfactor_change
+        match.team1.players.filter(miss_next=True).update(miss_next=False)
+        match.team2.players.filter(miss_next=True).update(miss_next=False)
+        casualties = Casualty.objects.filter(match=match)
+        for cas in casualties:
+            cas.victim_player.miss_next=True
+            cas.victim_player.save()
+        team1.save()
+        team2.save()
         match.status = "completed"
         match.save()
 
