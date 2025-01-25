@@ -52,9 +52,9 @@ class PlayerType(models.Model):
     strength = models.IntegerField()
     agility = models.IntegerField()
     armour = models.IntegerField()
-    starting_skills = models.CharField(max_length=100)
-    normal_skill_access = models.CharField(max_length=100)
-    double_skill_access = models.CharField(max_length=100)
+    starting_skills = models.CharField(max_length=200)
+    normal_skill_access = models.CharField(max_length=10)
+    double_skill_access = models.CharField(max_length=10)
 
     def __str__(self):
         return self.name
@@ -76,9 +76,9 @@ class Player(models.Model):
     strength = models.IntegerField(default=0)
     agility = models.IntegerField(default=0)
     armour = models.IntegerField(default=0)
-    skills = models.CharField(max_length=100, default='None')
-    normal_skill_access = models.CharField(max_length=100, default='None')
-    double_skill_access = models.CharField(max_length=100, default='None')
+    skills = models.CharField(max_length=250, default='None')
+    normal_skill_access = models.CharField(max_length=10, default='None')
+    double_skill_access = models.CharField(max_length=10, default='None')
     injuries = models.CharField(max_length=100, default='None')
     status = models.CharField(
         max_length=10,
