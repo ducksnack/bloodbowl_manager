@@ -6,14 +6,15 @@ This is a Django project for managing a Blood Bowl league. The app provides tool
 
 To run this project, you will need:
 
-Python 3.10 or higher
+- Python 3.10 or higher
 
-Django 4.x
+- Django 4.x
 
 After running the database migrations, you can populate the database with initial data (factions, player types, and injury types) using the following command:
 
 '''bash
 python manage.py populate_initial_data
+'''
 
 
 ## Features Developed So Far
@@ -57,5 +58,7 @@ python manage.py populate_initial_data
 ### User Authentication
 
 * Add user login and management functionality to enable multi-user access and roles.
+
+---
 
 If you have any questions or run into issues, feel free to reach out or submit feedback!
