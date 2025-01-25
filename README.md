@@ -31,21 +31,25 @@ python manage.py populate_initial_data
 
 * Record match results, including casualties, weather conditions, and other relevant details.
 
-### Casualty Tracking
+### Stat Tracking
 
-* Log casualties caused during matches, with detailed attribution to causing players.
+* Log stats like touchdowns, casualties, and injuries during matches, with detailed attribution to involved players.
 
 ### Team Statistics
 
 * View team performance metrics and other statistics.
 
+### Initial Leagues
+
+* Track league results and standings.
+  
 ## Features in the Pipeline
 
 ### League Management
 
 * Create and manage leagues.
 
-* Register teams in leagues and track league standings.
+* Register teams in leagues.
 
 ### Player Level-Ups
 
