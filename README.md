@@ -43,6 +43,8 @@ python manage.py populate_initial_data
 
 * Track league results and standings.
   
+* Note that currently, teams can not enter leagues. Entering a team into a league is currently done through the django admin interface.
+  
 ## Features in the Pipeline
 
 ### League Management
@@ -62,7 +64,3 @@ python manage.py populate_initial_data
 ### User Authentication
 
 * Add user login and management functionality to enable multi-user access and roles.
-
----
-
-If you have any questions or run into issues, feel free to reach out or submit feedback!
