@@ -23,8 +23,8 @@ class Command(BaseCommand):
             {"name": "Elf", "reroll": 50, "apo": True},
             {"name": "Goblin", "reroll": 60, "apo": True},
             {"name": "Halfling", "reroll": 60, "apo": True},
-            {"name": "High Elves", "reroll": 50, "apo": True},
-            {"name": "Humans", "reroll": 50, "apo": True},
+            {"name": "High Elf", "reroll": 50, "apo": True},
+            {"name": "Human", "reroll": 50, "apo": True},
             {"name": "Khemri", "reroll": 70, "apo": False},
             {"name": "Lizardman", "reroll": 60, "apo": True},
             {"name": "Necromantic", "reroll": 70, "apo": False},
@@ -35,7 +35,7 @@ class Command(BaseCommand):
             {"name": "Skaven", "reroll": 60, "apo": True},
             {"name": "Undead", "reroll": 70, "apo": False},
             {"name": "Vampire", "reroll": 70, "apo": True},
-            {"name": "Wood Elves", "reroll": 50, "apo": True},
+            {"name": "Wood Elf", "reroll": 50, "apo": True},
         ]
 
         for faction in factions:
@@ -49,16 +49,36 @@ class Command(BaseCommand):
     def populate_player_types(self):
 
         factions = {
-            "Humans": get_object_or_404(Faction, faction_name="Humans"),
-            "Amazons": get_object_or_404(Faction, faction_name="Amazons"),
+            "Amazon": get_object_or_404(Faction, faction_name="Amazon"),
+            "Chaos": get_object_or_404(Faction, faction_name="Chaos"),
+            "Chaos Dwarf": get_object_or_404(Faction, faction_name="Chaos Dwarf"),
+            "Dark Elf": get_object_or_404(Faction, faction_name="Dark Elf"),
+            "Dwarf": get_object_or_404(Faction, faction_name="Dwarf"),
+            "Elf": get_object_or_404(Faction, faction_name="Elf"),
+            "Goblin": get_object_or_404(Faction, faction_name="Goblin"),
+            "Halfling": get_object_or_404(Faction, faction_name="Halfling"),
+            "High Elf": get_object_or_404(Faction, faction_name="High Elf"),
+            "Human": get_object_or_404(Faction, faction_name="Human"),
+            "Khemri": get_object_or_404(Faction, faction_name="Khemri"),
+            "Lizardman": get_object_or_404(Faction, faction_name="Lizardman"),
+            "Necromantic": get_object_or_404(Faction, faction_name="Necromantic"),
+            "Norse": get_object_or_404(Faction, faction_name="Norse"),
+            "Nurgle": get_object_or_404(Faction, faction_name="Nurgle"),
+            "Ogre": get_object_or_404(Faction, faction_name="Ogre"),
+            "Orc": get_object_or_404(Faction, faction_name="Orc"),
+            "Skaven": get_object_or_404(Faction, faction_name="Skaven"),
+            "Undead": get_object_or_404(Faction, faction_name="Undead"),
+            "Vampire": get_object_or_404(Faction, faction_name="Vampire"),
+            "Wood Elf": get_object_or_404(Faction, faction_name="Wood Elf"),
         }
+
 
         player_types = [
             # Amazon
-            {"name": "AmazonLinewoman", "faction": factions["Amazons"], "position": "Linewoman", "max_quantity": 16, "price": 50, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge", "normal_skill_access": "G", "double_skill_access": "ASP"},
-            {"name": "AmazonThrower", "faction": factions["Amazons"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Pass", "normal_skill_access": "GP", "double_skill_access": "AS"},
-            {"name": "AmazonCatcher", "faction": factions["Amazons"], "position": "Catcher", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Catch", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "AmazonBlitzer", "faction": factions["Amazons"], "position": "Blitzer", "max_quantity": 4, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Block", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "AmazonLinewoman", "faction": factions["Amazon"], "position": "Linewoman", "max_quantity": 16, "price": 50, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge", "normal_skill_access": "G", "double_skill_access": "ASP"},
+            {"name": "AmazonThrower", "faction": factions["Amazon"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Pass", "normal_skill_access": "GP", "double_skill_access": "AS"},
+            {"name": "AmazonCatcher", "faction": factions["Amazon"], "position": "Catcher", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Catch", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "AmazonBlitzer", "faction": factions["Amazon"], "position": "Blitzer", "max_quantity": 4, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Block", "normal_skill_access": "GS", "double_skill_access": "AP"},
             # Chaos
             {"name": "ChaosBeastman", "faction": factions["Chaos"], "position": "Beastman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Horns", "normal_skill_access": "GSM", "double_skill_access": "AP"},
             {"name": "ChaosChaosWarror", "faction": factions["Chaos"], "position": "Chaos Warrior", "max_quantity": 4, "price": 100, "movement": 5, "strength": 4, "agility": 3, "armour": 9, "starting_skills": "-", "normal_skill_access": "GSM", "double_skill_access": "AP"},
@@ -94,12 +114,12 @@ class Command(BaseCommand):
             {"name": "GoblinTroll", "faction": factions["Goblin"], "position": "Troll", "max_quantity": 2, "price": 110, "movement": 4, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Loner, Always Hungry, Mighty Blow, Really Stupid, Regeneration, Throw Team-Mate", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # Halfling
             {"name": "HalflingHalfling", "faction": factions["Halfling"], "position": "Halfling", "max_quantity": 16, "price": 30, "movement": 5, "strength": 2, "agility": 3, "armour": 6, "starting_skills": "Dodge, Right Stuff, Stunty", "normal_skill_access": "A", "double_skill_access": "GSP"},
-            {"name": "HalflingTreeman", "faction": factions["Halflin"], "position": "Treeman", "max_quantity": 2, "price": 120, "movement": 2, "strength": 6, "agility": 1, "armour": 10, "starting_skills": "Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-Mate", "normal_skill_access": "S", "double_skill_access": "GAP"},
+            {"name": "HalflingTreeman", "faction": factions["Halfling"], "position": "Treeman", "max_quantity": 2, "price": 120, "movement": 2, "strength": 6, "agility": 1, "armour": 10, "starting_skills": "Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-Mate", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # High Elf
-            {"name": "HighElfLineman", "faction": factions["HighElf"], "position": "Lineman", "max_quantity": 16, "price": 70, "movement": 6, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "-", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "HighElfThrower", "faction": factions["HighElf"], "position": "Thrower", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Pass, Safe Throw", "normal_skill_access": "GAP", "double_skill_access": "S"},
-            {"name": "HighElfCatcher", "faction": factions["HighElf"], "position": "Catcher", "max_quantity": 4, "price": 90, "movement": 8, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Catch", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "HighElfBlitzer", "faction": factions["HighElf"], "position": "Blitzer", "max_quantity": 2, "price": 100, "movement": 7, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Block", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "HighElfLineman", "faction": factions["High Elf"], "position": "Lineman", "max_quantity": 16, "price": 70, "movement": 6, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "-", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "HighElfThrower", "faction": factions["High Elf"], "position": "Thrower", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Pass, Safe Throw", "normal_skill_access": "GAP", "double_skill_access": "S"},
+            {"name": "HighElfCatcher", "faction": factions["High Elf"], "position": "Catcher", "max_quantity": 4, "price": 90, "movement": 8, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Catch", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "HighElfBlitzer", "faction": factions["High Elf"], "position": "Blitzer", "max_quantity": 2, "price": 100, "movement": 7, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Block", "normal_skill_access": "GA", "double_skill_access": "SP"},
             # Humans
             {"name": "HumanLineman", "faction": factions["Human"], "position": "Lineman", "max_quantity": 16, "price": 50, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "-", "normal_skill_access": "G", "double_skill_access": "ASP"},
             {"name": "HumanCatcher", "faction": factions["Human"], "position": "Catcher", "max_quantity": 4, "price": 70, "movement": 8, "strength": 2, "agility": 3, "armour": 7, "starting_skills": "Catch, Dodge", "normal_skill_access": "GA", "double_skill_access": "SP"},
