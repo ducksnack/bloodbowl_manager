@@ -12,9 +12,7 @@ To run this project, you will need:
 
 After running the database migrations, you can populate the database with initial data (factions, player types, and injury types) using the following command:
 
-'''bash
 python manage.py populate_initial_data
-'''
 
 
 ## Features Developed So Far
