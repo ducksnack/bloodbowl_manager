@@ -22,4 +22,5 @@ urlpatterns = [
     path('add_casualty/<int:match_id>/<int:team_id>/', views.add_casualty, name='add_casualty'),
     path('add_interception/<int:match_id>/<int:team_id>/', views.add_interception, name='add_interception'),
     path('teams/<int:team_id>/get_team_value/', views.get_team_value, name='get_team_value'),
+    path('create_league/', views.create_league, name='create_league'),
 ]

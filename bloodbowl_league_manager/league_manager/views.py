@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury
-from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm
+from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm, LeagueForm
 from django.db.models import Count, Q, F
 
 def get_lowest_available_number(team):
@@ -21,6 +21,17 @@ def index(request):
 def teams(request):
     teams = Team.objects.all()
     return render(request, 'league_manager/teams.html', {'teams': teams})
+
+def create_league(request):
+    if request.method == 'POST':
+        form = LeagueForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('leagues')
+    else:
+        form = LeagueForm()
+    
+    return render(request, 'league_manager/create_league.html', {'form':form})
 
 def create_team(request):
     if request.method == 'POST':

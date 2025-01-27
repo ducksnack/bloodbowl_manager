@@ -1,5 +1,10 @@
 from django import forms
-from .models import Team, Player, PlayerType
+from .models import Team, Player, PlayerType, League
+
+class LeagueForm(forms.ModelForm):
+    class Meta:
+        model = League
+        fields = ['name', 'managers']
 
 class TeamForm(forms.ModelForm):
     class Meta:
