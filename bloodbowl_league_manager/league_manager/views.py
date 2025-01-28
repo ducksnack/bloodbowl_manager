@@ -33,6 +33,29 @@ def create_league(request):
     
     return render(request, 'league_manager/create_league.html', {'form':form})
 
+def join_league(request, team_id):
+    leagues = League.objects.all()
+    team = get_object_or_404(Team, id=team_id)
+
+    if team.league:
+        team.league = None
+        team.save()
+        return redirect('team_details', team_id = team.id)
+    
+    if request.method == 'POST':
+        league_id = request.POST.get('league_id')
+        team.league = get_object_or_404(League, id = league_id)
+        team.save()
+
+        return redirect('team_details', team_id = team_id)
+    
+    content = {
+        'team':team,
+        'leagues':leagues
+    }
+
+    return render(request, 'league_manager/join_league.html', content)
+
 def create_team(request):
     if request.method == 'POST':
         form = TeamForm(request.POST)

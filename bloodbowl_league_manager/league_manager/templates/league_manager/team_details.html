@@ -10,6 +10,8 @@
     {% if team.faction %}
         <p><strong>Faction:</strong> {{ team.faction }}</p>
         <p><strong>Coach:</strong> {{ team.coach }}</p>
+        <p><strong>Current League:</strong> {% if team.league %} <a href="{% url 'league_details' team.league.id %}">{{ team.league }}</a> (<a href="{% url 'join_league' team.id %}">Drop from League</a>) {% else %} None (<a href="{% url 'join_league' team.id %}">Register in a League</a>){% endif %}</p>
+        
 
         <h2>Players</h2>
         <table border="1">
