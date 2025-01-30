@@ -4,7 +4,12 @@
     <title>League Page</title>
 </head>
 <body>
-    <h1>Pregame:</h1>
+    <h1>{{ team1 }} vs. {{ team2 }}, pregame:</h1>
+    <p>{{ team1 }} team value: {{ team1_team_value }}</p>
+    <p>{{ team2 }} team value: {{ team2_team_value }}</p>
+    {% if inducing_team %}
+    <p>{{ inducing_team}} can purchase inducements for a total value of {{ inducement_value }}</p>
+    {% endif %}
     
     <form method="post">
         {% csrf_token %}

@@ -295,10 +295,26 @@ def start_match(request, match_id):
     team1 = match.team1
     team2 = match.team2
 
+    team1_team_value = team1.get_total_team_value()
+    team2_team_value = team2.get_total_team_value()
+    if team1_team_value == team2_team_value:
+        inducing_team = None
+        inducement_value = 0
+    elif team1_team_value < team2_team_value:
+        inducing_team = team1
+        inducement_value = team2_team_value - team1_team_value
+    elif team2_team_value < team1_team_value:
+        inducing_team = team2
+        inducement_value = team1_team_value - team2_team_value
+
     context = {
         'league': league,
         'team1': team1,
         'team2': team2,
+        'team1_team_value': team1_team_value,
+        'team2_team_value': team2_team_value,
+        'inducing_team': inducing_team,
+        'inducement_value': inducement_value,
     }
 
     return render(request, 'league_manager/start_match.html', context)
