@@ -31,7 +31,8 @@
         {% endfor %}
     </tbody>
 </table>
-<p><a href="{% url 'add_match' league.id %}">Record Match</a></p>
+
+<p><a href="{% url 'schedule_match' league.id %}">Schedule Match</a></p>
 
 
 <h2>Matches in progress</h2>
@@ -49,6 +50,24 @@
                 <td>{{ match.team1 }} vs. {{ match.team2 }}</td>
                 <td>{{ match.get_score }}</td>
                 <td><a href="{% url 'match_page' match.id %}">Resume</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Scheduled Matches</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Teams</th>
+            <th>Start Match</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in scheduled_matches %}
+            <tr>
+                <td>{{ match.team1 }} vs. {{ match.team2 }}</td>
+                <td><a href="{% url 'start_match' match.id %}">Start</a></td>
             </tr>
         {% endfor %}
     </tbody>

@@ -12,7 +12,6 @@ urlpatterns = [
     path('team/<int:team_id>/modify/', views.modify_team, name='modify_team'),
     path('leagues/', views.league_list, name='leagues'),
     path('leagues/<int:league_id>/', views.league_details, name='league_details'),
-    path('leagues/<int:league_id>/add_match/', views.add_match, name='add_match'),
     path('leagues/start_match/<int:league_id>/<int:team1_id>/<int:team2_id>/<int:team1_fame>/<int:team2_fame>/<str:weather>/', views.start_match, name='start_match'),
     path('matches/<int:match_id>/', views.match_page, name='match_page'),
     path('add_touchdown/<int:match_id>/<int:team_id>/', views.add_touchdown, name='add_touchdown'),
@@ -23,5 +22,7 @@ urlpatterns = [
     path('add_interception/<int:match_id>/<int:team_id>/', views.add_interception, name='add_interception'),
     path('teams/<int:team_id>/get_team_value/', views.get_team_value, name='get_team_value'),
     path('create_league/', views.create_league, name='create_league'),
-    path('<int:team_id>/league_registration/', views.join_league, name='join_league')
+    path('<int:team_id>/league_registration/', views.join_league, name='join_league'),
+    path('<int:league_id>/schedule_match/', views.schedule_match, name='schedule_match'),
+    path('start_match/<int:match_id>/', views.start_match, name="start_match"),
 ]

@@ -160,6 +160,7 @@ class Match(models.Model):
     STATUS_CHOICES = [
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
+        ('scheduled', 'Scheduled'),
         ('invalid', 'Invalid'),
     ]
 
@@ -175,7 +176,7 @@ class Match(models.Model):
     team2_fanfactor_change = models.IntegerField(default=0)
     status = models.CharField(max_length=15,
                               choices=STATUS_CHOICES,
-                              default='in_progress')
+                              default='scheduled') # a match should either be: in_progress, scheduled, completed, or invalid
     
     def get_teams_completions(self):
         team1_comps = self.match_completions.filter(team=self.team1)
@@ -261,4 +262,20 @@ class Injury(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player_injuries")
     injury_type = models.ForeignKey(InjuryType, on_delete=models.CASCADE)
 
+
+class LevelUpType(models.Model):
+    name = models.CharField(max_length=25)
+    ma_modifier = models.IntegerField(default=0)
+    st_modifier = models.IntegerField(default=0)
+    ag_modifier = models.IntegerField(default=0)
+    av_modifier = models.IntegerField(default=0)
+    skill = models.CharField(max_length=20, default="")
+    category = models.CharField(max_length=20, default="")
+
+    def __str__(self):
+        return f'{self.name} [{self.description}]'
+
+class LevelUp(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player_levels")
+    level_up_type = models.ForeignKey(LevelUpType, on_delete=models.CASCADE)
 

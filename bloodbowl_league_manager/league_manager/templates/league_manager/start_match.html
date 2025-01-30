@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>League Page</title>
+</head>
+<body>
+    <h1>Pregame:</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="weather_dropdown">Select Weather</label>
+        <select name="weather_dropdown" id="weather_dropdown_id">
+            <option value="sweltering_heat">Sweltering Heat</option>
+            <option value="very_sunny">Very Sunny</option>
+            <option value="nice" selected>Nice</option>
+            <option value="pouring_rain">Pouring Rain</option>
+            <option value="blizzard">Blizzard</option>
+        </select>
+
+        <label for="team1_fame">Team1 FAME:</label>
+        <select name="team1_fame" id="team1_fame_id">
+            <option value=0 selected>0</option>
+            <option value=1>+1</option>
+            <option value=2>+2</option>
+        </select>
+
+        <label for="team2_fame">Team2 FAME:</label>
+        <select name="team2_fame" id="team2_fame_id">
+            <option value=0 selected>0</option>
+            <option value=1>+1</option>
+            <option value=2>+2</option>
+        </select>
+
+        <button type="submit" name="action" value="start">Start Match</button>
+        <p><a href="{% url 'league_details' league.id %}">Back to League</a></p>
+        <button type="submit" name="action" value="cancel">Cancel Match</button>
+    </form>
+
+  
+
+</body>
+</html>

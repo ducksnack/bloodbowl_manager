@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>League Page</title>
+</head>
+<body>
+    <h1>Schedule Match in {{ league_name }}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="team1">Select Team1:</label>
+        <select id="team1_id" name="team1_id" class="team_selector_dropdown" required>
+            <option value="">Select Team1</option>
+            {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="team2">Select Team2:</label>
+        <select id="team2_id" name="team2_id" class="team_selector_dropdown" required>
+            <option value="">Select Team2</option>
+            {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+        </select> 
+
+        <button type="submit" name="action" value="schedule">Schedule Match</button>
+        <button type="submit" name="action" value="start">Start Match</button>
+    </form>
+
+    <p><a href="{% url 'league_details' league.id %}">Cancel Match</a></p>
+
+</body>
+</html>

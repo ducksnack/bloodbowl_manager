@@ -163,6 +163,7 @@ def league_details(request, league_id):
     teams = Team.objects.filter(league=league)
     matches_completed = Match.objects.filter(league=league, status="completed").order_by('-id')
     matches_in_progress = Match.objects.filter(league=league, status="in_progress").order_by('-id')
+    scheduled_matches = Match.objects.filter(league=league, status="scheduled").order_by('-id')
 
     team_stats = []
 
@@ -225,40 +226,83 @@ def league_details(request, league_id):
         'team_stats':team_stats,
         'matches_completed': matches_completed,
         'matches_in_progress': matches_in_progress,
+        'scheduled_matches': scheduled_matches,
     }
     return render(request, 'league_manager/league_details.html', context)
-
-def add_match(request, league_id):
-    
-    league = get_object_or_404(League, id=league_id)
-    league_name = league.name
-    teams = Team.objects.filter(league=league)
-
-    print(teams)
-    
-    context = {
-        'league_id':league_id,
-        'league_name':league_name,
-        'teams':teams
-        }
-    
-    return render(request, 'league_manager/add_match.html', context)
-"""
-def start_match(request, league_id, team1_id, team2_id):
-
-    match = Match.objects.create(league_id, team1_id, team2_id)
-
-    return redirect('match_page', match_id=match.id)
-"""
 
 def get_team_value(request, team_id):
     team = get_object_or_404(Team, id=team_id)
     return JsonResponse({'team_value': team.get_total_team_value()})
 
-def start_match(request, league_id, team1_id, team2_id, team1_fame, team2_fame, weather):
+def schedule_match(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    teams = Team.objects.filter(league=league)
+
+    if request.method == 'POST':
+        team1_id = request.POST.get('team1_id')
+        team2_id = request.POST.get('team2_id')
+        team1 = get_object_or_404(Team, id=team1_id)
+        team2 = get_object_or_404(Team, id=team2_id)
+
+        match = Match.objects.create(league=league, team1=team1, team2=team2)
+
+        action = request.POST.get("action")
+        
+        if action == "schedule":
+            
+            return redirect('league_details', league_id=league_id)
+        
+        if action == "start":
+            return redirect('start_match', match_id=match.id)
+
+    context = {
+        'league':league,
+        'teams':teams,
+    }
+
+    return render(request, 'league_manager/schedule_match.html', context)
+
+
+def start_match(request, match_id):
+
+    match = get_object_or_404(Match, id=match_id)
+    league = match.league
+
+    if request.method == 'POST':
+
+        action = request.POST.get('action')
+
+        if action == 'start':
+            match.team1_fame = request.POST.get('team1_fame')
+            match.team1_fame = request.POST.get('team1_fame')
+            match.weather = request.POST.get('weather_dropdown')
+            match.status = 'in_progress'
+
+            print(match.team1_fame)
+            print(match.team2_fame)
+            print(match.weather)
+            print(match.status)
+            match.save()
+
+            return redirect('match_page', match_id = match_id)
+        
+        if action == 'cancel':
+
+            match.delete()
+
+            return redirect('league_details', league_id = league.id)
     
-    match = Match.objects.create(league_id=league_id, team1_id=team1_id, team2_id=team2_id, team1_fame=team1_fame, team2_fame=team2_fame, weather=weather)
-    return redirect('match_page', match_id=match.id)
+    team1 = match.team1
+    team2 = match.team2
+
+    context = {
+        'league': league,
+        'team1': team1,
+        'team2': team2,
+    }
+
+    return render(request, 'league_manager/start_match.html', context)
+
 
 def end_match(request, match_id):
     
@@ -311,12 +355,14 @@ def end_match(request, match_id):
 
     return render(request, 'league_manager/end_of_match.html', context)
 
+
 def cancel_match(request, match_id):
     
     match = get_object_or_404(Match, id=match_id)
     match.delete()
 
     return redirect('league_details', league_id=match.league.id)
+
 
 def match_page(request, match_id):
     match = get_object_or_404(Match, id=match_id)
@@ -347,6 +393,7 @@ def match_page(request, match_id):
 
     return render(request, 'league_manager/match_page.html', context)
 
+
 def add_completion(request, match_id, team_id):
     match = get_object_or_404(Match, id=match_id)
     team = get_object_or_404(Team, id=team_id)
@@ -370,6 +417,7 @@ def add_completion(request, match_id, team_id):
     }
 
     return render(request, 'league_manager/add_completion.html', context)
+
 
 def add_casualty(request, match_id, team_id):
     match = get_object_or_404(Match, id=match_id)
@@ -403,6 +451,7 @@ def add_casualty(request, match_id, team_id):
     
     return render(request, 'league_manager/add_casualty.html', context)
 
+
 def add_interception(request, match_id, team_id):
     match = get_object_or_404(Match, id=match_id)
     team = get_object_or_404(Team, id=team_id)
@@ -430,13 +479,14 @@ def add_interception(request, match_id, team_id):
     
     return render(request, 'league_manager/add_interception.html', context)
 
+
 def add_touchdown(request, match_id, team_id):
     # Get the match and team objects
     match = get_object_or_404(Match, id=match_id)
     team = get_object_or_404(Team, id=team_id)
     
     # Get the players associated with this team
-    players = team.players.all()  # Assuming Team has a reverse relationship to Player
+    players = team.players.all() 
     
     if request.method == 'POST':
         player_id = request.POST.get('player_id')
