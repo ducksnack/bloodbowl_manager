@@ -37,19 +37,15 @@ python manage.py populate_initial_data
 
 * View team performance metrics and other statistics.
 
-### Initial Leagues
-
-* Track league results and standings.
-  
-* Note that currently, teams can not enter leagues. Entering a team into a league is currently done through the django admin interface.
-  
-## Features in the Pipeline
-
 ### League Management
 
 * Create and manage leagues.
 
 * Register teams in leagues.
+  
+* Track league results and standings.
+  
+## Features in the Pipeline
 
 ### Player Level-Ups
 
