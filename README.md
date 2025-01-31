@@ -49,10 +49,6 @@ python manage.py populate_initial_data
   
 ## Features in the Pipeline
 
-### Match features
-
-* Add option to add Injuries to players during a match, unrelated to caused casualties (e.g. from failed dodges)
-
 ### CSS and Styling
 
 * Improve the visual design of the app for a better user experience.
