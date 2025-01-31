@@ -14,9 +14,7 @@ class TeamForm(forms.ModelForm):
 class ModifyPlayerForm(forms.ModelForm):
     class Meta:
         model = Player
-        fields = ['name', 'number', 'position', 'movement', 'strength', 'agility', 'armour', 'skills', 'value']
-
-    miss_next = forms.BooleanField(required=False, label='Miss Next Game')
+        fields = ['name', 'number', 'value']
 
 class AddPlayerForm(forms.Form):
     name = forms.CharField(max_length=100, label='Player Name')
