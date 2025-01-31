@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-+cs5d-(zsvopov=nmf(0$vrf#cof3flxk20)g-xiqcew1mu41%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.ducksnackgames.com']
+ALLOWED_HOSTS = ['www.ducksnackgames.com', '127.0.0.1']
 
 
 # Application definition
@@ -78,7 +78,7 @@ WSGI_APPLICATION = "bloodbowl_league_manager.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": str(BASE_DIR / "db.sqlite3"),
     }
 }
 
