@@ -79,6 +79,12 @@ def team_details(request, team_id):
     }
     return render(request, "league_manager/team_details.html", context)
 
+def faction_details(request, faction_name):
+    context = {
+        "faction": faction_name
+    }
+    return render(request, "league_manager/faction_details.html", context)
+
 
 def modify_player(request, player_id):
     player = get_object_or_404(Player, id=player_id)
