@@ -236,6 +236,12 @@ class Match(models.Model):
 
         return [team1_cas, team2_cas]
     
+    def get_teams_injuries(self):
+        team1_injuries = self.match_injuries.filter(player__team=self.team1)
+        team2_injuries = self.match_injuries.filter(player__team=self.team2)
+
+        return [team1_injuries, team2_injuries]
+    
     def get_score(self):
         team1_score = self.get_teams_tds()[0].count()
         team2_score = self.get_teams_tds()[1].count()

@@ -446,6 +446,7 @@ def match_page(request, match_id):
     team1_touchdowns, team2_touchdowns  = match.get_teams_tds()
     team1_completions, team2_completions  = match.get_teams_completions()
     team1_casualties, team2_casualties  = match.get_teams_casualties()
+    team1_injuries, team2_injuries = match.get_teams_injuries()
     team1_score, team2_score  = match.get_score()
     in_progress = match.status == "in_progress"
 
@@ -460,6 +461,8 @@ def match_page(request, match_id):
         'team2_completions':team2_completions,
         'team1_casualties':team1_casualties,
         'team2_casualties':team2_casualties,
+        'team1_injuries':team1_injuries,
+        'team2_injuries':team2_injuries,
         'team1_score': team1_score,
         'team2_score': team2_score,
         'in_progress': in_progress,
@@ -580,3 +583,28 @@ def add_touchdown(request, match_id, team_id):
 
     return render(request, 'league_manager/add_touchdown.html', context)
 
+def add_injury(request, match_id, team_id):
+    match = get_object_or_404(Match, id=match_id)
+    team = get_object_or_404(Team, id=team_id)
+    injury_types = InjuryType.objects.all()
+
+    players = team.players.all()
+
+    if request.method == 'POST':
+        injured_player_id = request.POST.get('injured_player_id')
+        injured_player = get_object_or_404(Player, id=injured_player_id)
+        injury_type_id = request.POST.get('injury_type_id')
+        injury_type = get_object_or_404(InjuryType, id=injury_type_id)
+
+        Injury.objects.create(match=match, player=injured_player, injury_type=injury_type)
+
+        return redirect('match_page', match_id=match_id)
+    
+    context = {
+        'team':team,
+        'match':match,
+        'players':players,
+        'injury_types': injury_types
+    }
+    
+    return render(request, 'league_manager/add_injury.html', context)

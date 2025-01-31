@@ -79,7 +79,26 @@
     <p><a href="{% url 'add_interception' match.id team2.id %}">Add Team2 Interception</a></p>
 {% endif %}
 
-<!-- MATCH BOTTM -->
+<!-- INJURIES -->
+<h2>Team1 Injuries</h2>
+{% for inj in team1_injuries %}
+    <p>{{ inj.player.name }} ({{ inj.injury_type.name }} [{{ inj.injury_type.description }}])</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_injury' match.id team1.id %}">Add Team1 Injury</a></p>
+{% endif %}
+
+<h2>Team2 Injuries</h2>
+{% for inj in team2_injuries %}
+    <p>{{ inj.player.name }} ({{ inj.injury_type.name }} [{{ inj.injury_type.description }}])</p>
+{% endfor %}
+
+{% if in_progress %}
+    <p><a href="{% url 'add_injury' match.id team2.id %}">Add Team2 Injury</a></p>
+{% endif %}
+
+<!-- MATCH BOTTOM -->
 {% if in_progress %}
     <p><a href="{% url 'end_match' match.id %}">End Match</a></p>
 {% endif %}

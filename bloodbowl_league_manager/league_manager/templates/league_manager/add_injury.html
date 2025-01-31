@@ -1,0 +1,19 @@
+<h1>Adding Injury for {{ team.name }} in match {{ match.id }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="injured_player_id">Select Injured Player</label>
+    <select name="injured_player_id" id="injured_player_id">
+        {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+        {% endfor %}
+    </select>
+    <label for="injury_type_id">Select Injury</label>
+    <select name="injury_type_id" id="injury_type_id">
+        {% for injury in injury_types %}
+            <option value="{{ injury.id }}">{{ injury.name }} [{{ injury.description }}]</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Injury</button>
+</form>
