@@ -1,0 +1,18 @@
+<form method="post">
+    {% csrf_token %}
+
+    <label for="level_up">Choose a skill:</label>
+    <select name="level_up" id="level_up_id">
+        <option value="">Select Skill</option>
+
+        {% for category, skills in skills.items %}
+            <optgroup label="{{ category }}">
+                {% for skill in skills %}
+                    <option value="{{ skill.id }}">{{ skill.name }}</option>
+                {% endfor %}
+            </optgroup>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Level</button>
+</form>

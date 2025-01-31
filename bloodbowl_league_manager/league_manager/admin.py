@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import League, Team, Player, PlayerType, Faction, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury
+from .models import League, Team, Player, PlayerType, Faction, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
 
 admin.site.register(League)
 admin.site.register(Team)
@@ -14,3 +14,5 @@ admin.site.register(Interception)
 admin.site.register(MostValuablePlayer)
 admin.site.register(InjuryType)
 admin.site.register(Injury)
+admin.site.register(LevelUpType)
+admin.site.register(LevelUp)

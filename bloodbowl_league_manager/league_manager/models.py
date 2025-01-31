@@ -121,6 +121,10 @@ class Player(models.Model):
         spp = 1 * self.get_n_completions() + 3 * self.get_n_touchdowns() + 2 * self.get_n_interceptions() + 2 * self.get_n_casualties() + 5 * self.get_n_mvps()
         return spp
     
+    def get_level_ups(self):
+        level_ups = self.level_ups.all()
+        return level_ups
+
     def get_stats(self):
         base_ma = self.player_type.movement
         base_st = self.player_type.strength
@@ -137,12 +141,48 @@ class Player(models.Model):
             ag_modifier += injury.injury_type.ag_modifier
             av_modifier += injury.injury_type.av_modifier
 
+        level_ups = self.get_level_ups()
+        for level_up in level_ups:
+            ma_modifier += level_up.level_up_type.ma_modifier
+            st_modifier += level_up.level_up_type.st_modifier
+            ag_modifier += level_up.level_up_type.ag_modifier
+            av_modifier += level_up.level_up_type.av_modifier
+
         ma = base_ma + ma_modifier
         st = base_st + st_modifier
         ag = base_ag + ag_modifier
         av = base_av + av_modifier
 
         return {"movement":ma, "strength":st, "agility":ag, "armour":av}
+    
+    def get_skills(self):
+        skills = self.player_type.starting_skills
+        level_ups = self.get_level_ups()
+        for level_up in level_ups:
+            skill = level_up.level_up_type.skill
+            if skill is not None:
+                skills = skills + ', ' + skill
+
+        return skills
+    
+    def get_value(self):
+        total_value = self.player_type.price
+        level_ups = self.get_level_ups()
+        for level_up in level_ups:
+            if level_up.level_up_type.category in self.normal_skill_access:
+                value_increase = 20
+            elif level_up.level_up_type.category in self.double_skill_access:
+                value_increase = 30
+            elif level_up.level_up_type.category in ['+MA', '+AV']:
+                value_increase = 30
+            elif level_up.level_up_type.category == '+AG':
+                value_increase = 40
+            elif level_up.level_up_type.category == '+ST':
+                value_increase = 50
+            
+            total_value += value_increase
+        
+        return total_value
 
 
     """
@@ -262,6 +302,8 @@ class Injury(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player_injuries")
     injury_type = models.ForeignKey(InjuryType, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.player} ({self.player.team}), {self.injury_type}'
 
 class LevelUpType(models.Model):
     name = models.CharField(max_length=25)
@@ -269,13 +311,16 @@ class LevelUpType(models.Model):
     st_modifier = models.IntegerField(default=0)
     ag_modifier = models.IntegerField(default=0)
     av_modifier = models.IntegerField(default=0)
-    skill = models.CharField(max_length=20, default="")
+    skill = models.CharField(max_length=20, blank=True, null=True, default=None)
     category = models.CharField(max_length=20, default="")
 
     def __str__(self):
-        return f'{self.name} [{self.description}]'
+        return self.name
 
 class LevelUp(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="player_levels")
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="level_ups")
     level_up_type = models.ForeignKey(LevelUpType, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.player} ({self.player.team}), {self.level_up_type}'
 

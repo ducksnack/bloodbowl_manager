@@ -48,8 +48,8 @@
                     <td>{{ player.get_stats.strength }}</td>
                     <td>{{ player.get_stats.agility }}</td>
                     <td>{{ player.get_stats.armour }}</td>
-                    <td>{{ player.skills }}</td>
-                    <td>{{ player.value }}</td>
+                    <td>{{ player.get_skills }}</td>
+                    <td>{{ player.get_value }}</td>
                     <td>{% if player.miss_next %}Miss{% endif %}</td>
                     <td>{% for injury in player.get_injuries %} {% if injury.injury_type.description != "No long term effect" and injury.injury_type.description != "Miss next game" %} {{ injury.injury_type.name }} [{{ injury.injury_type.description }}] {% endif %} {% endfor %}</td>
                     <td>{{ player.get_n_completions }}</td>

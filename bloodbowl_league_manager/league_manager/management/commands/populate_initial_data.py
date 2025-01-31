@@ -1,14 +1,15 @@
 from django.core.management.base import BaseCommand
-from league_manager.models import PlayerType, Faction, InjuryType
+from league_manager.models import PlayerType, Faction, InjuryType, LevelUpType
 from django.shortcuts import get_object_or_404
 
 class Command(BaseCommand):
-    help = 'Populate database with initial data for player types, factions, and injury types'
+    help = 'Populate database with initial data for player types, factions, injury types, and level-up types'
     
     def handle(self, *args, **kwargs):
         self.populate_factions()
         self.populate_player_types()
         self.populate_injury_types()
+        self.populate_level_up_types()
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
@@ -224,4 +225,79 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.WARNING(f"Injury type already exists: {it['name']}"))
 
-    
+    def populate_level_up_types(self):
+
+        level_up_types = [
+            # General Skills
+            {'name':'Block', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill':'Block', 'category':'G'},
+            {'name':'Dauntless', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill':'Dauntless', 'category':'G'},
+            {'name':'Dirty Player', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill':'Dirty Player', 'category':'G'},
+            {'name':'Fend', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill':'Fend', 'category':'G'},
+            {'name':'Frenzy', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill':'Frenzy', 'category':'G'},
+            {'name':'Kick', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Kick', 'category':'G'},
+            {'name':'Kick-off Return', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Kick-off Return', 'category':'G'},
+            {'name':'Pass Block', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Pass Block', 'category':'G'},
+            {'name':'Pro', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Pro', 'category':'G'},
+            {'name':'Shadowing', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Shadowing', 'category':'G'},
+            {'name':'Strip Ball', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Strip Ball', 'category':'G'},
+            {'name':'Sure Hands', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Sure Hands', 'category':'G'},
+            {'name':'Tackle', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Tackle', 'category':'G'},
+            {'name':'Wrestle', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Wrestle', 'category':'G'},
+            # Agility
+            {'name':'Catch', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Catch', 'category':'A'},
+            {'name':'Diving Catch', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Diving Catch', 'category':'A'},
+            {'name':'Diving Tackle', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Diving Tackle', 'category':'A'},
+            {'name':'Dodge', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Dodge', 'category':'A'},
+            {'name':'Jump Up', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Jump Up', 'category':'A'},
+            {'name':'Leap', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Leap', 'category':'A'},
+            {'name':'Side Step', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Side Step', 'category':'A'},
+            {'name':'Sneaky Git', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Sneaky Git', 'category':'A'},
+            {'name':'Sprint', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Sprint', 'category':'A'},
+            {'name':'Sure Feet', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Sure Feet', 'category':'A'},
+            # Strength
+            {'name':'Break Tackle', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Break Tackel', 'category':'S'},
+            {'name':'Grab', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Grab', 'category':'S'},
+            {'name':'Guard', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Guard', 'category':'S'},
+            {'name':'Juggernaut', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Juggernaut', 'category':'S'},
+            {'name':'Mighty Blow', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Mightny Blow', 'category':'S'},
+            {'name':'Multiple Block', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Multiple Block', 'category':'S'},
+            {'name':'Piling On', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Piling On', 'category':'S'},
+            {'name':'Stand Firm', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Stand Firm', 'category':'S'},
+            {'name':'Strong Arm', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Strong Arm', 'category':'S'},
+            {'name':'Thick Skull', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Thick Skull', 'category':'S'},
+            # Passing
+            {'name':'Accurate', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Accurate', 'category':'P'},
+            {'name':'Dump-off', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Dump-off', 'category':'P'},
+            {'name':'Hail Mary Pass', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Hail Mary Pass', 'category':'P'},
+            {'name':'Leader', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Leader', 'category':'P'},
+            {'name':'Nerves of Steel', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Nerves of Steel', 'category':'P'},
+            {'name':'Pass', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Pass', 'category':'P'},
+            {'name':'Safe Throw', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Safe Throw', 'category':'P'},
+            # Mutation
+            {'name':'Big Hand', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Big Hand', 'category':'M'},
+            {'name':'Claw / Claws', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Claw / Claws', 'category':'M'},
+            {'name':'Disturbing Presence', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Disturbing Presence', 'category':'M'},
+            {'name':'Extra Arm', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Extra Arm', 'category':'M'},
+            {'name':'Foul Appearance', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill':'Foul Appearance', 'category':'M'},
+            {'name':'Horns', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Horns', 'category':'M'},
+            {'name':'Prehensile Tail', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Prehensile Tail', 'category':'M'},
+            {'name':'Tentacles', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Tentacles', 'category':'M'},
+            {'name':'Two Heads', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Two Heads', 'category':'M'},
+            {'name':'Very Long Legs', 'ma':0, 'st':0, 'ag':0, 'av':0, 'skill': 'Very Long Legs', 'category':'M'},
+            # Stat Increases
+            {'name':'+ MA', 'ma':1, 'st':0, 'ag':0, 'av':0, 'skill': None, 'category':'+MA'},
+            {'name':'+ ST', 'ma':0, 'st':1, 'ag':0, 'av':0, 'skill': None, 'category':'+ST'},
+            {'name':'+ AG', 'ma':0, 'st':0, 'ag':1, 'av':0, 'skill': None, 'category':'+AG'},
+            {'name':'+ AV', 'ma':0, 'st':0, 'ag':0, 'av':1, 'skill': None, 'category':'+AV'},
+        ]
+
+        for level_up_type in level_up_types:
+            obj, created = LevelUpType.objects.get_or_create(name=level_up_type["name"], ma_modifier=level_up_type["ma"], st_modifier=level_up_type["st"], ag_modifier=level_up_type["ag"], av_modifier=level_up_type["av"], skill=level_up_type["skill"], category=level_up_type["category"])
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Added level-up type: {level_up_type['name']}"))
+            else:
+                self.stdout.write(self.style.WARNING(f"Level-up type already exists: {level_up_type['name']}"))
+
+
+
+
