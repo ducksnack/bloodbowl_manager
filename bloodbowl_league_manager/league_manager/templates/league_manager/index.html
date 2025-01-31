@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Bowl League</title>
-</head>
-<body>
-    <h1>Welcome to the Blood Bowl League Management App!</h1>
-    <p><a href="{% url 'teams' %}">View Teams</a></p>
+{% extends "league_manager/base.html" %}
+{% block title %}Blood Bowl League{% endblock %}
 
-    <a href="{% url 'leagues' %}">Leagues</a>
+{% block content %}
+<h1>Welcome to the Blood Bowl League Management App!</h1>
+<p><a href="{% url 'teams' %}">View Teams</a></p>
 
-    <p><a href="{% url 'create_team' %}">Create New Team</a></p>
+<p><a href="{% url 'leagues' %}">Leagues</a></p>
 
-    <p><a href="{% url 'factions' %}">View Factions</a></p>
-</body>
-</html>
+<p><a href="{% url 'create_team' %}">Create New Team</a></p>
+
+<p><a href="{% url 'factions' %}">View Factions</a></p>
+{% endblock %}

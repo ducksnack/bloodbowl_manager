@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Create New League</title>
-</head>
-<body>
-    <h1>Create a New League</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create League</button>
-    </form>
-    <a href="{% url 'leagues' %}">Back to Leagues</a>
-</body>
-</html>
+{% extends "league_manager/base.html" %}
+{% block title %}Create New League{% endblock %}
+
+{% block content %}
+<h1>Create a New League</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create League</button>
+</form>
+<a href="{% url 'leagues' %}">Back to Leagues</a>
+{% endblock %}

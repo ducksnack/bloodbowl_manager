@@ -1,72 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factions</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-6">
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6 text-center">Factions</h1>
-        <div id="faction-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-    </div>
+{% extends "league_manager/base.html" %}
+{% block title %}Faction Overview{% endblock %}
 
-    {% load static %}
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const factions = [
-        { name: "Amazons", icon: "{% static 'league_manager/icons/amazons.png' %}", link: "{% url 'faction_details' 'amazons' %}" },
-        { name: "Bretonnian", icon: "{% static 'league_manager/icons/bretonnian.png' %}", link: "{% url 'faction_details' 'bretonnian' %}" },
-        { name: "Chaos Chosen", icon: "{% static 'league_manager/icons/chaos-chosen.png' %}", link: "{% url 'faction_details' 'chaos-chosen' %}" },
-        { name: "Chaos Dwarves", icon: "{% static 'league_manager/icons/chaos-dwarves.png' %}", link: "{% url 'faction_details' 'chaos-dwarves' %}" },
-        { name: "Chaos Renegade", icon: "{% static 'league_manager/icons/chaos-renegade.png' %}", link: "{% url 'faction_details' 'chaos-renegade' %}" },
-        { name: "Daemons of Khorne", icon: "{% static 'league_manager/icons/daemons-of-khorne.png' %}", link: "{% url 'faction_details' 'daemons-of-khorne' %}" },
-        { name: "Dark Elf", icon: "{% static 'league_manager/icons/dark-elf.png' %}", link: "{% url 'faction_details' 'dark-elf' %}" },
-        { name: "Dwarf", icon: "{% static 'league_manager/icons/dwarf.png' %}", link: "{% url 'faction_details' 'dwarf' %}" },
-        { name: "Elven Union", icon: "{% static 'league_manager/icons/elven-union.png' %}", link: "{% url 'faction_details' 'elven-union' %}" },
-        { name: "Goblin", icon: "{% static 'league_manager/icons/goblin.png' %}", link: "{% url 'faction_details' 'goblin' %}" },
-        { name: "Halfling", icon: "{% static 'league_manager/icons/halfling.png' %}", link: "{% url 'faction_details' 'halfling' %}" },
-        { name: "High Elf", icon: "{% static 'league_manager/icons/high-elf.png' %}", link: "{% url 'faction_details' 'high-elf' %}" },
-        { name: "Human", icon: "{% static 'league_manager/icons/human.png' %}", link: "{% url 'faction_details' 'human' %}" },
-        { name: "Lizardmen", icon: "{% static 'league_manager/icons/lizardmen.png' %}", link: "{% url 'faction_details' 'lizardmen' %}" },
-        { name: "Necromantic Horror", icon: "{% static 'league_manager/icons/necromantic-horror.png' %}", link: "{% url 'faction_details' 'necromantic-horror' %}" },
-        { name: "Norse", icon: "{% static 'league_manager/icons/norse.png' %}", link: "{% url 'faction_details' 'norse' %}" },
-        { name: "Nurgle", icon: "{% static 'league_manager/icons/nurgle.png' %}", link: "{% url 'faction_details' 'nurgle' %}" },
-        { name: "Ogre", icon: "{% static 'league_manager/icons/ogre.png' %}", link: "{% url 'faction_details' 'ogre' %}" },
-        { name: "Old World Alliance", icon: "{% static 'league_manager/icons/old-world-alliance.png' %}", link: "{% url 'faction_details' 'old-world-alliance' %}" },
-        { name: "Orc", icon: "{% static 'league_manager/icons/orc.png' %}", link: "{% url 'faction_details' 'orc' %}" },
-        { name: "Shambling Undead", icon: "{% static 'league_manager/icons/shambling-undead.png' %}", link: "{% url 'faction_details' 'shambling-undead' %}" },
-        { name: "Simyin", icon: "{% static 'league_manager/icons/simyin.png' %}", link: "{% url 'faction_details' 'simyin' %}" },
-        { name: "Skaven", icon: "{% static 'league_manager/icons/skaven.png' %}", link: "{% url 'faction_details' 'skaven' %}" },
-        { name: "Slann", icon: "{% static 'league_manager/icons/slann.png' %}", link: "{% url 'faction_details' 'slann' %}" },
-        { name: "Snotling", icon: "{% static 'league_manager/icons/snotling.png' %}", link: "{% url 'faction_details' 'snotling' %}" },
-        { name: "Tomb Kings", icon: "{% static 'league_manager/icons/tomb-kings.png' %}", link: "{% url 'faction_details' 'tomb-kings' %}" },
-        { name: "Underworld Denizens", icon: "{% static 'league_manager/icons/underworld-denizens.png' %}", link: "{% url 'faction_details' 'underworld-denizens' %}" },
-        { name: "Vampire", icon: "{% static 'league_manager/icons/vampire.png' %}", link: "{% url 'faction_details' 'vampire' %}" },
-        { name: "Wood Elf", icon: "{% static 'league_manager/icons/wood-elf.png' %}", link: "{% url 'faction_details' 'wood-elf' %}" }
-    ];
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Factions</h1>
+    <div id="faction-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+</div>
 
-            const factionList = document.getElementById("faction-list");
-            
-            if (factionList) {
-                factions.forEach(faction => {
-                    const factionElement = document.createElement("a");
-                    factionElement.href = faction.link;
-                    factionElement.className = "group";
-                    
-                    factionElement.innerHTML = `
-                        <div class="p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center">
-                            <img src="${faction.icon}" alt="${faction.name}" class="w-24 h-24 mb-3 transition-transform group-hover:scale-105" />
-                            <span class="text-lg font-medium text-gray-800 group-hover:text-blue-600">${faction.name}</span>
-                        </div>
-                    `;
-                    
-                    factionList.appendChild(factionElement);
-                });
-            }
-        });
-    </script>
+{% load static %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const factions = [
+    { name: "Amazon", icon: "{% static 'league_manager/icons/amazons.png' %}", link: "{% url 'faction_details' 'amazon' %}" },
+    { name: "Bretonnian", icon: "{% static 'league_manager/icons/bretonnian.png' %}", link: "{% url 'faction_details' 'bretonnian' %}" },
+    { name: "Chaos Chosen", icon: "{% static 'league_manager/icons/chaos-chosen.png' %}", link: "{% url 'faction_details' 'chaos-chosen' %}" },
+    { name: "Chaos Dwarves", icon: "{% static 'league_manager/icons/chaos-dwarves.png' %}", link: "{% url 'faction_details' 'chaos-dwarves' %}" },
+    { name: "Chaos Renegade", icon: "{% static 'league_manager/icons/chaos-renegade.png' %}", link: "{% url 'faction_details' 'chaos-renegade' %}" },
+    { name: "Daemons of Khorne", icon: "{% static 'league_manager/icons/daemons-of-khorne.png' %}", link: "{% url 'faction_details' 'daemons-of-khorne' %}" },
+    { name: "Dark Elf", icon: "{% static 'league_manager/icons/dark-elf.png' %}", link: "{% url 'faction_details' 'dark-elf' %}" },
+    { name: "Dwarf", icon: "{% static 'league_manager/icons/dwarf.png' %}", link: "{% url 'faction_details' 'dwarf' %}" },
+    { name: "Elven Union", icon: "{% static 'league_manager/icons/elven-union.png' %}", link: "{% url 'faction_details' 'elven-union' %}" },
+    { name: "Goblin", icon: "{% static 'league_manager/icons/goblin.png' %}", link: "{% url 'faction_details' 'goblin' %}" },
+    { name: "Halfling", icon: "{% static 'league_manager/icons/halfling.png' %}", link: "{% url 'faction_details' 'halfling' %}" },
+    { name: "High Elf", icon: "{% static 'league_manager/icons/high-elf.png' %}", link: "{% url 'faction_details' 'high-elf' %}" },
+    { name: "Human", icon: "{% static 'league_manager/icons/human.png' %}", link: "{% url 'faction_details' 'human' %}" },
+    { name: "Lizardmen", icon: "{% static 'league_manager/icons/lizardmen.png' %}", link: "{% url 'faction_details' 'lizardmen' %}" },
+    { name: "Necromantic Horror", icon: "{% static 'league_manager/icons/necromantic-horror.png' %}", link: "{% url 'faction_details' 'necromantic-horror' %}" },
+    { name: "Norse", icon: "{% static 'league_manager/icons/norse.png' %}", link: "{% url 'faction_details' 'norse' %}" },
+    { name: "Nurgle", icon: "{% static 'league_manager/icons/nurgle.png' %}", link: "{% url 'faction_details' 'nurgle' %}" },
+    { name: "Ogre", icon: "{% static 'league_manager/icons/ogre.png' %}", link: "{% url 'faction_details' 'ogre' %}" },
+    { name: "Old World Alliance", icon: "{% static 'league_manager/icons/old-world-alliance.png' %}", link: "{% url 'faction_details' 'old-world-alliance' %}" },
+    { name: "Orc", icon: "{% static 'league_manager/icons/orc.png' %}", link: "{% url 'faction_details' 'orc' %}" },
+    { name: "Shambling Undead", icon: "{% static 'league_manager/icons/shambling-undead.png' %}", link: "{% url 'faction_details' 'shambling-undead' %}" },
+    { name: "Simyin", icon: "{% static 'league_manager/icons/simyin.png' %}", link: "{% url 'faction_details' 'simyin' %}" },
+    { name: "Skaven", icon: "{% static 'league_manager/icons/skaven.png' %}", link: "{% url 'faction_details' 'skaven' %}" },
+    { name: "Slann", icon: "{% static 'league_manager/icons/slann.png' %}", link: "{% url 'faction_details' 'slann' %}" },
+    { name: "Snotling", icon: "{% static 'league_manager/icons/snotling.png' %}", link: "{% url 'faction_details' 'snotling' %}" },
+    { name: "Tomb Kings", icon: "{% static 'league_manager/icons/tomb-kings.png' %}", link: "{% url 'faction_details' 'tomb-kings' %}" },
+    { name: "Underworld Denizens", icon: "{% static 'league_manager/icons/underworld-denizens.png' %}", link: "{% url 'faction_details' 'underworld-denizens' %}" },
+    { name: "Vampire", icon: "{% static 'league_manager/icons/vampire.png' %}", link: "{% url 'faction_details' 'vampire' %}" },
+    { name: "Wood Elf", icon: "{% static 'league_manager/icons/wood-elf.png' %}", link: "{% url 'faction_details' 'wood-elf' %}" }
+];
 
-</body>
-</html>
+        const factionList = document.getElementById("faction-list");
+        
+        if (factionList) {
+            factions.forEach(faction => {
+                const factionElement = document.createElement("a");
+                factionElement.href = faction.link;
+                factionElement.className = "group";
+                
+                factionElement.innerHTML = `
+                    <div class="p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center">
+                        <img src="${faction.icon}" alt="${faction.name}" class="w-24 h-24 mb-3 transition-transform group-hover:scale-105" />
+                        <span class="text-lg font-medium text-gray-800 group-hover:text-blue-600">${faction.name}</span>
+                    </div>
+                `;
+                
+                factionList.appendChild(factionElement);
+            });
+        }
+    });
+</script>
+{% endblock %}

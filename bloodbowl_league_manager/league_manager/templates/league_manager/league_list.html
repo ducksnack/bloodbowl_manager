@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Leagues{% endblock %}
+
+{% block content %}
 <h1>Leagues</h1>
 <table>
     <thead>
@@ -19,3 +23,4 @@
 <p><a href="{% url 'create_league' %}">Create New League</a></p>
 
 <p><a href="{% url 'index' %}">Back to Home</a></p>
+{% endblock %}

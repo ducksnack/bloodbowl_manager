@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
+from .models import Faction, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
 from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm, LeagueForm
 from django.db.models import Count, Q, F
 
@@ -23,7 +23,8 @@ def teams(request):
     return render(request, 'league_manager/teams.html', {'teams': teams})
 
 def factions(request):
-    return render(request, 'league_manager/factions.html')
+    factions = Faction.objects.all()
+    return render(request, 'league_manager/factions.html', {'factions' : factions})
 
 def create_league(request):
     if request.method == 'POST':
@@ -80,8 +81,12 @@ def team_details(request, team_id):
     return render(request, "league_manager/team_details.html", context)
 
 def faction_details(request, faction_name):
+    faction = get_object_or_404(Faction, faction_name__iexact=faction_name)
+    player_types = PlayerType.objects.filter(faction=faction)
+    
     context = {
-        "faction": faction_name
+        "faction": faction,
+        "player_types": player_types
     }
     return render(request, "league_manager/faction_details.html", context)
 

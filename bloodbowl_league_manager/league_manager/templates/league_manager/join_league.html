@@ -1,22 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Join League Page</title>
-</head>
-<body>
-    <h1>Register {{ team }} in a League</h1>
+{% extends "league_manager/base.html" %}
+{% block title %}Join League Page{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
-        <label for="league">Select League:</label>
-        <select id="league" name="league_id" class="league_selector_dropdown" required>
-            <option value="">Select League</option>
-            {% for league in leagues %}
-                <option value="{{ league.id }}">{{ league.name }}</option>
-            {% endfor %}
-        </select>   
+{% block content %}
+<h1>Register {{ team }} in a League</h1>
 
-        <button type="submit">Register</button>
-    </form>
-</body>
-</html>
+<form method="post">
+    {% csrf_token %}
+    <label for="league">Select League:</label>
+    <select id="league" name="league_id" class="league_selector_dropdown" required>
+        <option value="">Select League</option>
+        {% for league in leagues %}
+            <option value="{{ league.id }}">{{ league.name }}</option>
+        {% endfor %}
+    </select>   
+
+    <button type="submit">Register</button>
+</form>
+{% endblock %}

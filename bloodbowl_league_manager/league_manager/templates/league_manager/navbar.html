@@ -1,0 +1,65 @@
+<div class="w-25 min-vh-100 bg-dark text-white p-4 custom_navbar">
+    <h2 class="text-center text-light">Menu</h2>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'index' %}" class="text-white d-block p-2">🏠 Home</a></li>
+        
+        <!-- Expandable Teams Section -->
+        <li>
+            <a href="#" class="text-white d-block p-2" onclick="toggleDropdown(event, 'teams-dropdown', 'teams-menu')">⚽ Teams ▼</a>
+            <ul id="teams-dropdown" class="list-unstyled ms-3 collapse">
+                <li><a href="{% url 'teams' %}" class="text-white d-block p-2">📋 Show Teams</a></li>
+                <li><a href="{% url 'create_team' %}" class="text-white d-block p-2">➕ Create New Team</a></li>
+            </ul>
+        </li>
+        
+        <!-- Expandable Leagues Section -->
+        <li>
+            <a href="#" class="text-white d-block p-2" onclick="toggleDropdown(event, 'leagues-dropdown', 'leagues-menu')">🏆 Leagues ▼</a>
+            <ul id="leagues-dropdown" class="list-unstyled ms-3 collapse">
+                <li><a href="{% url 'leagues' %}" class="text-white d-block p-2">📜 Show Leagues</a></li>
+                <li><a href="{% url 'create_league' %}" class="text-white d-block p-2">➕ Create New League</a></li>
+            </ul>
+        </li>
+        
+        <li><a href="{% url 'factions' %}" class="text-white d-block p-2">🛡️ Factions</a></li>
+    </ul>
+</div>
+
+<script>
+    function toggleDropdown(event, dropdownId) {
+        event.preventDefault();
+        let dropdown = document.getElementById(dropdownId);
+        dropdown.classList.toggle("collapse");
+
+        // Store expanded state in localStorage
+        if (dropdown.classList.contains("collapse") == false) {
+            localStorage.setItem(dropdownId, "open");
+        } else {
+            localStorage.removeItem(dropdownId);
+        }
+    }
+
+    // Function to restore dropdown state on page load
+    function restoreDropdownState() {
+        let dropdowns = ["teams-dropdown", "leagues-dropdown"];
+        dropdowns.forEach(id => {
+            if (localStorage.getItem(id) === "open") {
+                console.log("local stored")
+                document.getElementById(id).classList.toggle("collapse");
+            }
+        });
+    }
+
+    // Restore state when page loads
+    document.addEventListener("DOMContentLoaded", restoreDropdownState);
+
+</script>
+
+<style>
+    .collapse {
+        display: none;
+    }
+    .collapse.show {
+        display: block;
+    }
+</style>

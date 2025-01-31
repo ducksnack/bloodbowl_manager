@@ -1,40 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Teams</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <h1>Teams</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Coach</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for team in teams %}
-            <tr>
-                <td><a href="{% url 'team_details' team.id %}">{{ team.name }}</a></td>
-                <td>{{ team.coach }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p><a href="{% url 'index' %}">Back to Home</a></p>
-</body>
-</html>
+{% extends "league_manager/base.html" %}
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<h1>Teams</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Coach</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in teams %}
+        <tr>
+            <td><a href="{% url 'team_details' team.id %}">{{ team.name }}</a></td>
+            <td>{{ team.coach }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p><a href="{% url 'index' %}">Back to Home</a></p>
+{% endblock %}

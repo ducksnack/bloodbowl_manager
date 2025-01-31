@@ -1,14 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ team.name }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="p-4">
+{% extends "league_manager/base.html" %}
+{% block title %}{{ faction }} Roster{% endblock %}
 
-    <h1>{{ faction.name }}</h1>
+{% block content %}
 
-</body>
-</html>
+<h1>{{ faction }}</h1>
+
+{% load static %}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th colspan="11" align="left class="text-start">{{ faction }}</th>
+            </tr>
+            <tr>
+                <th colspan="3" align="left">Positional</th>
+                <th>MA</th>
+                <th>ST</th>
+                <th>AG</th>
+                <th>AV</th>
+                <th>Skills</th>
+                <th>Normal</th>
+                <th>Double</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for type in player_types %}
+            <tr>
+                <td><img src="{% static 'league_manager/icons/faction_postional_icons/' %}{{ type.name|lower }}.png" /></td>
+                <td> 0 - {{ type.max_quantity }}</td>
+                <td>
+                    <script>
+                        document.write("{{ type.name }}".replace(/([a-z])([A-Z])/g, "$1 $2"));
+                    </script>
+                </td>
+                <td>{{ type.movement }}</td>
+                <td>{{ type.strength }}</td>
+                <td>{{ type.agility }}</td>
+                <td>{{ type.armour }}</td>
+                <td>{{ type.starting_skills }}</td>
+                <td>{{ type.normal_skill_access }}</td>
+                <td>{{ type.double_skill_access }}</td>
+                <td>{{ type.price }}k</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tr>
+            <td colspan="2" align="left"><strong>Rerolls: </strong></td>
+            <td colspan="9" align="left">{{ faction.reroll_value }}k ({{ faction.reroll_value|add:faction.reroll_value }}k after team creation)</td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left"><strong> Apothecary: </strong></td>
+            <td colspan="9" align="left">{{ faction.apo_available|yesno:"Yes,No" }}</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}
