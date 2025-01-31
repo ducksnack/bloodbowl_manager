@@ -23,6 +23,8 @@ python manage.py populate_initial_data
 
 * Track player statistics and attributes.
 
+* Level up players
+
 ### Match Scheduling and Results
 
 * Schedule matches between teams.
@@ -47,9 +49,9 @@ python manage.py populate_initial_data
   
 ## Features in the Pipeline
 
-### Player Level-Ups
+### Match features
 
-* Implement functionality for leveling up players as they gain experience.
+* Add option to add Injuries to players during a match, unrelated to caused casualties (e.g. from failed dodges)
 
 ### CSS and Styling
 
