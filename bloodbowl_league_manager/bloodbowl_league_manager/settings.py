@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-+cs5d-(zsvopov=nmf(0$vrf#cof3flxk20)g-xiqcew1mu41%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.ducksnackgames.com']
 
 
 # Application definition
