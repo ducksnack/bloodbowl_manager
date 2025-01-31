@@ -27,4 +27,5 @@ urlpatterns = [
     path('start_match/<int:match_id>/', views.start_match, name="start_match"),
     path('<int:player_id>/level_up/', views.add_level_up, name="level_up"),
     path('add_injury/<int:match_id>/<int:team_id>/', views.add_injury, name='add_injury'),
+    path('factions/', views.factions, name='factions'),
 ]

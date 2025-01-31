@@ -4,77 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ team.name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
+<body class="p-4">
     <h1>{{ team.name }}</h1>
+
     {% if team.faction %}
-        <p><strong>Faction:</strong> {{ team.faction }}</p>
         <p><strong>Coach:</strong> {{ team.coach }}</p>
         <p><strong>Current League:</strong> {% if team.league %} <a href="{% url 'league_details' team.league.id %}">{{ team.league }}</a> (<a href="{% url 'join_league' team.id %}">Drop from League</a>) {% else %} None (<a href="{% url 'join_league' team.id %}">Register in a League</a>){% endif %}</p>
-        
 
-        <h2>Players</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Movement</th>
-                    <th>Strength</th>
-                    <th>Agility</th>
-                    <th>Armour</th>
-                    <th>Skills</th>
-                    <th>Value</th>
-                    <th>Miss Next</th>
-                    <th>Injuries</th>
-                    <th>PC</th>
-                    <th>TD</th>
-                    <th>INT</th>
-                    <th>CAS</th>
-                    <th>MVP</th>
-                    <th>SPP</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for player in players %}
-                <tr>
-                    <td>{{ player.number }}</td>
-                    <td>{{ player.name }}</td>
-                    <td>{{ player.position }}</td>
-                    <td>{{ player.get_stats.movement }}</td>
-                    <td>{{ player.get_stats.strength }}</td>
-                    <td>{{ player.get_stats.agility }}</td>
-                    <td>{{ player.get_stats.armour }}</td>
-                    <td>{{ player.get_skills }}</td>
-                    <td>{{ player.get_value }}</td>
-                    <td>{% if player.miss_next %}Miss{% endif %}</td>
-                    <td>{% for injury in player.get_injuries %} {% if injury.injury_type.description != "No long term effect" and injury.injury_type.description != "Miss next game" %} {{ injury.injury_type.name }} [{{ injury.injury_type.description }}] {% endif %} {% endfor %}</td>
-                    <td>{{ player.get_n_completions }}</td>
-                    <td>{{ player.get_n_touchdowns }}</td>
-                    <td>{{ player.get_n_interceptions }}</td>
-                    <td>{{ player.get_n_casualties }}</td>
-                    <td>{{ player.get_n_mvps }}</td>
-                    <td>{{ player.calculate_spp }}</td>
-                    <th><a href="{% url 'modify_player' player.id %}">Modify</a></th>
-                    <td><a href="{% url 'remove_player' player.id %}">Remove</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th colspan="10" class="text-start">{{ team.faction }}</th>
+                    </tr>
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>MA</th>
+                        <th>ST</th>
+                        <th>AG</th>
+                        <th>AV</th>
+                        <th>Skills</th>
+                        <th>Normal</th>
+                        <th>Double</th>
+                        <th>Value</th>
+                        <th>MNG</th>
+                        <th>Injuries</th>
+                        <th>PC</th>
+                        <th>TD</th>
+                        <th>INT</th>
+                        <th>CAS</th>
+                        <th>MVP</th>
+                        <th>SPP</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in players %}
+                    <tr>
+                        <td>{{ player.number }}</td>
+                        <td>{{ player.name }}</td>
+                        <td>{{ player.position }}</td>
+                        <td>{{ player.get_stats.movement }}</td>
+                        <td>{{ player.get_stats.strength }}</td>
+                        <td>{{ player.get_stats.agility }}</td>
+                        <td>{{ player.get_stats.armour }}</td>
+                        <td>{{ player.get_skills }}</td>
+                        <td>{{ player.normal_skill_access}}</td>
+                        <td>{{ player.double_skill_access }}</td>
+                        <td>{{ player.get_value }}</td>
+                        <td>{% if player.miss_next %}Miss{% endif %}</td>
+                        <td>{% for injury in player.get_injuries %} {% if injury.injury_type.description != "No long term effect" and injury.injury_type.description != "Miss next game" %} {{ injury.injury_type.name }} [{{ injury.injury_type.description }}] {% endif %} {% endfor %}</td>
+                        <td>{{ player.get_n_completions }}</td>
+                        <td>{{ player.get_n_touchdowns }}</td>
+                        <td>{{ player.get_n_interceptions }}</td>
+                        <td>{{ player.get_n_casualties }}</td>
+                        <td>{{ player.get_n_mvps }}</td>
+                        <td>{{ player.calculate_spp }}</td>
+                        <th><a href="{% url 'modify_player' player.id %}">Modify</a></th>
+                        <td><a href="{% url 'remove_player' player.id %}">Remove</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10"><strong>Re-Rolls:</strong> {{ team.rerolls }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"><strong>Apothecary:</strong> {% if team.apothecary %}Yes{% else %}No{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"><strong>Assistant Coaches:</strong> {{ team.assistant_coaches }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"><strong>Cheerleaders:</strong> {{ team.cheerleaders }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"><strong>Fan Factor:</strong> {{ team.fan_factor }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"><strong>Treasury:</strong> {{ team.treasury }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10"><strong>Total Team Value:</strong> {{ team.get_total_team_value }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
         <a href="{% url 'add_player' team_id=team.id %}">Add Player</a>
 
-        <h2>Team Stats</h2>
         <p><a href="{% url 'modify_team' team.id %}">Modify</a></p>
-        <p><strong>Rerolls:</strong> {{ team.rerolls }}</p>
-        <p><strong>Apothecary:</strong> {% if team.apothecary %}Yes{% else %}No{% endif %}</p>
-        <p><strong>Assistant Coaches:</strong> {{ team.assistant_coaches }}</p>
-        <p><strong>Cheerleaders:</strong> {{ team.cheerleaders }}</p>
-        <p><strong>Fan Factor:</strong> {{ team.fan_factor }}</p>
-        <p><strong>Treasury:</strong> {{ team.treasury }}</p>
-        <p><strong>Total Team Value:</strong> {{ team.get_total_team_value }}</p>
 
     {% else %}
         

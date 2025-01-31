@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">Factions</h1>
+        <div id="faction-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+
+    {% load static %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const factions = [
+                { name: "Amazons", icon: "{% static 'league_manager/icons/amazons_roster_icon.png' %}", link: "/factions/amazons" },
+                { name: "Dwarves", icon: "/icons/dwarves.png", link: "/factions/dwarves" },
+                { name: "Elves", icon: "/icons/elves.png", link: "/factions/elves" },
+                { name: "Orcs", icon: "/icons/orcs.png", link: "/factions/orcs" },
+                { name: "Humans", icon: "/icons/humans.png", link: "/factions/humans" }
+            ];
+
+            const factionList = document.getElementById("faction-list");
+            
+            if (factionList) {
+                factions.forEach(faction => {
+                    const factionElement = document.createElement("a");
+                    factionElement.href = faction.link;
+                    factionElement.className = "group";
+                    
+                    factionElement.innerHTML = `
+                        <div class="p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center">
+                            <img src="${faction.icon}" alt="${faction.name}" class="w-24 h-24 mb-3 transition-transform group-hover:scale-105" />
+                            <span class="text-lg font-medium text-gray-800 group-hover:text-blue-600">${faction.name}</span>
+                        </div>
+                    `;
+                    
+                    factionList.appendChild(factionElement);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

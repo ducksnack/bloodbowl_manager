@@ -22,6 +22,9 @@ def teams(request):
     teams = Team.objects.all()
     return render(request, 'league_manager/teams.html', {'teams': teams})
 
+def factions(request):
+    return render(request, 'league_manager/factions.html')
+
 def create_league(request):
     if request.method == 'POST':
         form = LeagueForm(request.POST)
