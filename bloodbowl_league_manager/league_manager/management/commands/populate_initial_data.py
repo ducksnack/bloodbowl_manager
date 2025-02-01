@@ -78,9 +78,6 @@ class Command(BaseCommand):
         PlayerType.objects.all().delete()
         self.stdout.write(self.style.WARNING("Cleared all existing player types."))
 
-        # Dynamically generate dictionary of faction objects
-        factions = {faction["name"]: get_object_or_404(Faction, faction_name=faction["name"]) for faction in factions_list}
-
         # Define the base path for icons
         ICON_BASE_PATH = "league_manager/icons/faction_postional_icons/"
 
@@ -107,20 +104,15 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR("Error: player_types.json file not found."))
             return
 
-        # Append the icon_path to each entry in player_types
-        for pt in player_types:
-            faction_name = pt["faction"].lower().replace(" ", "-")  # Convert to lowercase, replace spaces
-            position_name = pt["position"].lower().replace(" ", "-")  # Convert position to lowercase, replace spaces
-
-            pt["icon_path"] = f"{ICON_BASE_PATH}{faction_name}-{position_name}.png"
-
-       
-
-
         for pt in player_types:
 
             # Get Faction object
             faction_obj = Faction.objects.get(faction_name=pt["faction"])
+        
+            # Append the icon_path to each entry in player_types
+            faction_name = pt["faction"].lower().replace(" ", "-")  # Convert to lowercase, replace spaces
+            position_name = pt["position"].lower().replace(" ", "-")  # Convert position to lowercase, replace spaces
+            pt["icon_path"] = f"{ICON_BASE_PATH}{faction_name}-{position_name}.png"
 
             obj, created = PlayerType.objects.get_or_create(
                 name=pt["name"], 
