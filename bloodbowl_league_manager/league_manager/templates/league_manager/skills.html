@@ -2,28 +2,28 @@
 {% block title %}Skills Overview{% endblock %}
 
 {% block content %}
-<div class="container mx-auto mt-4">
-    <h1 class="mb-4 text-center text-2xl font-bold">Skills Overview</h1>
+<div class="container mt-4">
+    <h1 class="mb-4 text-center fw-bold">Skills Overview</h1>
 
-    <div class="space-y-4">
+    <div class="accordion" id="skillsAccordion">
         {% for skill in skills %}
-        <div class="border border-gray-300 rounded-lg shadow-md">
-            <!-- Button to toggle collapsible content -->
-            <button class="w-full px-4 py-3 text-left bg-gray-200 hover:bg-gray-300 font-semibold flex justify-between items-center" 
-                onclick="this.nextElementSibling.classList.toggle('hidden')">
-                <span>{{ skill.name }} <span class="text-gray-500">({{ skill.category }})</span></span>
-                <svg class="w-5 h-5 transition-transform transform rotate-0 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
+            <div class="accordion-item">
+                <!-- Accordion Header -->
+                <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                        {{ skill.name }} <span class="text-muted ms-2">({{ skill.category }})</span>
+                    </button>
+                </h2>
 
-            <!-- Collapsible content -->
-            <div class="hidden px-4 py-3 bg-white text-gray-700">
-                {{ skill.description }}
+                <!-- Collapsible Content -->
+                <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#skillsAccordion">
+                    <div class="accordion-body">
+                        {{ skill.description }}
+                    </div>
+                </div>
             </div>
-        </div>
         {% empty %}
-        <p class="text-center text-red-500">No skills found.</p>
+        <p class="text-center text-danger">No skills found.</p>
         {% endfor %}
     </div>
 </div>
