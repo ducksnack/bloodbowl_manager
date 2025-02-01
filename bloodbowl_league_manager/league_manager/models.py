@@ -54,13 +54,13 @@ class PlayerType(models.Model):
     strength = models.IntegerField()
     agility = models.IntegerField()
     armour = models.IntegerField()
+    normal_skill_access = models.CharField(max_length=10)
+    double_skill_access = models.CharField(max_length=10)
     icon_path = models.CharField(max_length=255, blank=True)
 
-    # Many-to-Many relationships with Skill
+     # Many-to-Many relationships with Skill
     starting_skills = models.ManyToManyField('Skill', related_name='starting_skill_players')
-    normal_skill_access = models.ManyToManyField('Skill', related_name='normal_skill_players')
-    double_skill_access = models.ManyToManyField('Skill', related_name='double_skill_players')
-    
+
     def __str__(self):
         return self.name
 

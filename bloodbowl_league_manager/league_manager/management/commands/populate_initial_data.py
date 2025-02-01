@@ -123,22 +123,18 @@ class Command(BaseCommand):
                 movement=pt["movement"], 
                 strength=pt["strength"], 
                 agility=pt["agility"], 
-                armour=pt["armour"], 
+                armour=pt["armour"],
+                normal_skill_access=pt["normal_skill_access"],
+                double_skill_access = pt["double_skill_access"],
                 icon_path=pt["icon_path"])
             
             # Convert skill access abbreviations into Skill objects
             starting_skills = [SKILL_CATEGORY_MAP[c] for c in pt["starting_skills"] if c in SKILL_CATEGORY_MAP]
-            normal_skills = [SKILL_CATEGORY_MAP[c] for c in pt["normal_skill_access"] if c in SKILL_CATEGORY_MAP]
-            double_skills = [SKILL_CATEGORY_MAP[c] for c in pt["double_skill_access"] if c in SKILL_CATEGORY_MAP]
 
             # Fetch Skill objects and assign to ManyToManyField
             starting_skills_objs = Skill.objects.filter(category__in=starting_skills)
-            normal_skill_objs = Skill.objects.filter(category__in=normal_skills)
-            double_skill_objs = Skill.objects.filter(category__in=double_skills)
 
             obj.starting_skills.set(starting_skills_objs)
-            obj.normal_skill_access.set(normal_skill_objs)
-            obj.double_skill_access.set(double_skill_objs)
             obj.save()
 
             if created:
