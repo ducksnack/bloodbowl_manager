@@ -36,9 +36,9 @@
                 <td>{{ type.armour }}</td>
                 <td>
                     {% for skill in type.starting_skills.values %}
-                        <span data-bs-toggle="popover" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name }}
+                        <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name }}
                         {% if not forloop.last %}, {% endif %}
-                        </span>
+                        </a>
                     {% endfor %}
                 </td>
                 <td>
@@ -74,6 +74,10 @@
     //Script for enabling popovers
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    const popover = new bootstrap.Popover('.popover-dismiss', {
+      trigger: 'focus'
+    })
+
 </script>
 
 {% endblock %}
