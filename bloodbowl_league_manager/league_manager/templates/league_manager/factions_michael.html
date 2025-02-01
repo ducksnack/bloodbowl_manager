@@ -1,0 +1,49 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Faction Overview{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Factions</h1>
+    <div id="faction-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+</div>
+
+{% load static %}
+<script>
+    // Parse JSON from Django
+    const factionNames = JSON.parse('{{ factions_json|safe }}');
+    
+    // Sort alphabetically (case-insensitive)
+    factionNames.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+
+    // Transform into objects with URLs
+    const factions = factionNames.map(name => {
+        const formattedName = name.toLowerCase().replace(/\s+/g, "-"); // Convert spaces to hyphens
+
+        return {
+            name: name, // Original name
+            icon: `{% static 'league_manager/icons/' %}${formattedName}.png`, // Static path
+            link: `/faction/${name}/` // Dynamic URL
+        };
+    });
+
+    const factionList = document.getElementById("faction-list");
+        
+    if (factionList) {
+        factions.forEach(faction => {
+            const factionElement = document.createElement("a");
+            factionElement.href = faction.link;
+            factionElement.className = "group";
+            
+            factionElement.innerHTML = `
+                <div class="p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center">
+                    <img src="${faction.icon}" alt="${faction.name}" class="w-24 h-24 mb-3 transition-transform group-hover:scale-105" />
+                    <span class="text-lg font-medium text-gray-800 group-hover:text-blue-600">${faction.name}</span>
+                </div>
+            `;
+            
+            factionList.appendChild(factionElement);
+        });
+    }
+
+</script>
+{% endblock %}
