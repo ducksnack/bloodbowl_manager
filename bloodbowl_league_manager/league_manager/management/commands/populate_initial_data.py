@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
     def populate_factions(self):
 
-        # 🚀 Step 1: Clear existing data
+        # Clear existing data
         Faction.objects.all().delete()
         self.stdout.write(self.style.WARNING("Cleared all existing factions."))
 
