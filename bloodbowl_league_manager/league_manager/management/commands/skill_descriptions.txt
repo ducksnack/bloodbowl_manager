@@ -54,6 +54,7 @@ Big Hand (Mutation)
 One of the player’s hands has grown monstrously large, yet remained
 completely functional. The player ignores modifier(s) for enemy tackle
 zones or Pouring Rain weather when he attempts to pick up the ball.
+
 Block (General)
 A player with the Block skill is proficient at knocking opponents down.
 The Block skill, if used, affects the results rolled with the Block dice, as
