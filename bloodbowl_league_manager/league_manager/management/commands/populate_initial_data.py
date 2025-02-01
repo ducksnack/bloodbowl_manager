@@ -20,33 +20,38 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING("Cleared all existing factions."))
 
         factions = [
-            {"name": "Amazon", "reroll": 50, "apo": True, "icon": "league_manager/icons/amazon.png"},
-            {"name": "Chaos Chosen", "reroll": 60, "apo": True, "icon": "league_manager/icons/chaos-chosen.png"},
-            {"name": "Chaos Dwarf", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-dwarves.png"},
-            {"name": "Chaos Renegade", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-renegade.png"},
-            {"name": "Dark Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/dark-elf.png"},
-            {"name": "Dwarf", "reroll": 50, "apo": True, "icon": "league_manager/icons/dwarf.png"},
-            {"name": "Elven Union", "reroll": 50, "apo": True, "icon": "league_manager/icons/elven-union.png"},
-            {"name": "Goblin", "reroll": 60, "apo": True, "icon": "league_manager/icons/goblin.png"},
-            {"name": "Halfling", "reroll": 60, "apo": True, "icon": "league_manager/icons/halfling.png"},
-            {"name": "High Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/high-elf.png"},
-            {"name": "Human", "reroll": 50, "apo": True, "icon": "league_manager/icons/human.png"},
-            {"name": "Lizardmen", "reroll": 60, "apo": True, "icon": "league_manager/icons/lizardmen.png"},
-            {"name": "Necromantic Horror", "reroll": 70, "apo": False, "icon": "league_manager/icons/necromantic-horror.png"},
-            {"name": "Norse", "reroll": 60, "apo": True, "icon": "league_manager/icons/norse.png"},
-            {"name": "Nurgle", "reroll": 70, "apo": False, "icon": "league_manager/icons/nurgle.png"},
-            {"name": "Ogre", "reroll": 70, "apo": True, "icon": "league_manager/icons/ogre.png"},
-            {"name": "Old World Alliance", "reroll": 70, "apo": True, "icon": "league_manager/icons/old-world-alliance.png"},
-            {"name": "Orc", "reroll": 60, "apo": True, "icon": "league_manager/icons/orc.png"},
-            {"name": "Shambling Undead", "reroll": 70, "apo": False, "icon": "league_manager/icons/shambling-undead.png"},
-            {"name": "Skaven", "reroll": 60, "apo": True, "icon": "league_manager/icons/skaven.png"},
-            {"name": "Slann", "reroll": 50, "apo": True, "icon": "league_manager/icons/slann.png"},
-            {"name": "Snotling", "reroll": 50, "apo": True, "icon": "league_manager/icons/snotling.png"},
-            {"name": "Tomb Kings", "reroll": 70, "apo": False, "icon": "league_manager/icons/tomb-kings.png"},
-            {"name": "Underworld Denizens", "reroll": 50, "apo": True, "icon": "league_manager/icons/underworld-denizens.png"},
-            {"name": "Vampire", "reroll": 70, "apo": True, "icon": "league_manager/icons/vampire.png"},
-            {"name": "Wood Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/wood-elf.png"},
+            {"name": "Amazon", "reroll": 50, "apo": True},
+            {"name": "Chaos Chosen", "reroll": 60, "apo": True},
+            {"name": "Chaos Dwarf", "reroll": 70, "apo": True},
+            {"name": "Chaos Renegade", "reroll": 70, "apo": True},
+            {"name": "Dark Elf", "reroll": 50, "apo": True},
+            {"name": "Dwarf", "reroll": 50, "apo": True},
+            {"name": "Elven Union", "reroll": 50, "apo": True},
+            {"name": "Goblin", "reroll": 60, "apo": True},
+            {"name": "Halfling", "reroll": 60, "apo": True},
+            {"name": "High Elf", "reroll": 50, "apo": True},
+            {"name": "Human", "reroll": 50, "apo": True},
+            {"name": "Lizardmen", "reroll": 60, "apo": True},
+            {"name": "Necromantic Horror", "reroll": 70, "apo": False},
+            {"name": "Norse", "reroll": 60, "apo": True},
+            {"name": "Nurgle", "reroll": 70, "apo": False},
+            {"name": "Ogre", "reroll": 70, "apo": True},
+            {"name": "Old World Alliance", "reroll": 70, "apo": True},
+            {"name": "Orc", "reroll": 60, "apo": True},
+            {"name": "Shambling Undead", "reroll": 70, "apo": False},
+            {"name": "Skaven", "reroll": 60, "apo": True},
+            {"name": "Slann", "reroll": 50, "apo": True},
+            {"name": "Snotling", "reroll": 50, "apo": True},
+            {"name": "Tomb Kings", "reroll": 70, "apo": False},
+            {"name": "Underworld Denizens", "reroll": 50, "apo": True},
+            {"name": "Vampire", "reroll": 70, "apo": True},
+            {"name": "Wood Elf", "reroll": 50, "apo": True},
         ]
+
+        ICON_BASE_PATH = "league_manager/icons/"
+        for faction in factions:
+            formatted_name = faction["name"].lower().replace(" ", "-")  # Convert to lowercase and replace spaces with hyphens
+            faction["icon"] = f"{ICON_BASE_PATH}{formatted_name}.png"
 
         for faction in factions:
                 obj, created = Faction.objects.get_or_create(
@@ -181,8 +186,18 @@ class Command(BaseCommand):
             {"name": "WoodElfTreeman", "faction": factions["Wood Elf"], "position": "Treeman", "max_quantity": 1, "price": 120, "movement": 2, "strength": 6, "agility": 1, "armour": 10, "starting_skills": "Loner, Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-Mate", "normal_skill_access": "S", "double_skill_access": "GAP"},
         ]
 
+        # Define the base path for icons
+        ICON_BASE_PATH = "league_manager/icons/faction_postional_icons/"
+
+        # Append the icon_path to each entry in player_types
         for pt in player_types:
-            obj, created = PlayerType.objects.get_or_create(name=pt["name"], faction=pt["faction"], position=pt["position"], max_quantity=pt["max_quantity"], price=pt["price"], movement=pt["movement"], strength=pt["strength"], agility=pt["agility"], armour=pt["armour"], starting_skills=pt["starting_skills"], normal_skill_access=pt["normal_skill_access"], double_skill_access=pt["double_skill_access"])
+            faction_name = pt["faction"].faction_name.lower().replace(" ", "-")  # Convert to lowercase, replace spaces
+            position_name = pt["position"].lower().replace(" ", "-")  # Convert position to lowercase, replace spaces
+
+            pt["icon_path"] = f"{ICON_BASE_PATH}{faction_name}-{position_name}.png"
+
+        for pt in player_types:
+            obj, created = PlayerType.objects.get_or_create(name=pt["name"], faction=pt["faction"], position=pt["position"], max_quantity=pt["max_quantity"], price=pt["price"], movement=pt["movement"], strength=pt["strength"], agility=pt["agility"], armour=pt["armour"], starting_skills=pt["starting_skills"], normal_skill_access=pt["normal_skill_access"], double_skill_access=pt["double_skill_access"], icon_path=pt["icon_path"])
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Added player type: {pt['name']}"))
             else:
