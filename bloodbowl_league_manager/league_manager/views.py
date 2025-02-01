@@ -622,3 +622,13 @@ def add_injury(request, match_id, team_id):
     }
     
     return render(request, 'league_manager/add_injury.html', context)
+
+def skills_overview(request):
+    categories = request.GET.getlist("category")  # Get category from query parameter
+    if categories:
+        skills = LevelUpType.objects.filter(category__in=categories)  # Filter by multiple categories
+    else:
+        skills = LevelUpType.objects.all()  # Show all skills by default
+    
+    context = {"skills": skills, "selected_categories": categories}
+    return render(request, "league_manager/skills.html", context)

@@ -44,7 +44,6 @@
         let dropdowns = ["teams-dropdown", "leagues-dropdown"];
         dropdowns.forEach(id => {
             if (localStorage.getItem(id) === "open") {
-                console.log("local stored")
                 document.getElementById(id).classList.toggle("collapse");
             }
         });

@@ -1,0 +1,14 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Skills Overview{% endblock %}
+
+{% block content %}
+
+<h1>Skills Overview</h1>
+
+<ul>
+    {% for skill in skills %}
+        <li>{{ skill.name }} - {{ skill.category }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
