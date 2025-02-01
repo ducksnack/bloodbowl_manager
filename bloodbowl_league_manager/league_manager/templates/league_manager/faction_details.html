@@ -27,7 +27,7 @@
         <tbody>
             {% for type in player_types %}
             <tr>
-                <td><img src="{% static 'league_manager/icons/faction_postional_icons/' %}{{ type.name|lower }}.png" /></td>
+                <td><img src="{% static type.icon_path %}" /></td>
                 <td> 0 - {{ type.max_quantity }}</td>
                 <td>{{ type.position }}</td>
                 <td>{{ type.movement }}</td>

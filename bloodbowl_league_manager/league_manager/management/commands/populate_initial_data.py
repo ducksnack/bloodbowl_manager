@@ -112,8 +112,7 @@ class Command(BaseCommand):
             # Append the icon_path to each entry in player_types
             faction_name = pt["faction"].lower().replace(" ", "-")  # Convert to lowercase, replace spaces
             position_name = pt["position"].lower().replace(" ", "-")  # Convert position to lowercase, replace spaces
-            # pt["icon_path"] = f"{ICON_BASE_PATH}{faction_name}-{position_name}.png"
-            pt["icon_path"] = "ICON.png"
+            pt["icon_path"] = f"{ICON_BASE_PATH}{faction_name}-{position_name}.png"
 
             obj, created = PlayerType.objects.get_or_create(
                 name=pt["name"], 
