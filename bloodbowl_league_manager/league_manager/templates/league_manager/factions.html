@@ -2,21 +2,25 @@
 {% block title %}Faction Overview{% endblock %}
 
 {% block content %}
-<div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold mb-6 text-center">Factions</h1>
-    <div id="faction-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-</div>
-
 {% load static %}
-
-{% for faction in factions %}
-    <a href="{% url 'faction_details' faction.faction_name %}">
-        <div class="p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center">
-            <img src="{% static faction.icon_path %}" alt="{{ faction.faction_name }} icon" class="w-24 h-24 mb-3 transition-transform group-hover:scale-105"/>
-            <span class="text-lg font-medium text-gray-800 group-hover:text-blue-600">{{ faction.faction_name }}</span>
-        </div>
-    </a>
-
-{% endfor %}
+<div class="container py-4">
+    <h1 class="text-center mb-4 fw-bold">Factions</h1>
+    
+    <div class="row g-4"> <!-- Bootstrap grid with spacing -->
+        {% for faction in factions %}
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3"> <!-- 3 per row on lg, 2 on md, 1 on sm -->
+                <a href="{% url 'faction_details' faction.faction_name %}" class="text-decoration-none">
+                    <div class="card shadow-sm border-0 text-center p-3">
+                        <img src="{% static faction.icon_path %}" alt="{{ faction.faction_name }} icon"
+                             class="card-img-top mx-auto d-block img-fluid w-50">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-dark">{{ faction.faction_name }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
 
