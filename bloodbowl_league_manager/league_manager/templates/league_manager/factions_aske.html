@@ -1,0 +1,22 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Faction Overview{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Factions</h1>
+    <div id="faction-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+</div>
+
+{% load static %}
+
+{% for faction in factions %}
+    <a href="{% url 'faction_details' faction.faction_name %}">
+        <div>
+            <img src="{% static faction.icon_path %}" alt="{{ faction.faction_name }} icon" />
+            <span>{{ faction.faction_name }}</span>
+        </div>
+    </a>
+
+{% endfor %}
+{% endblock %}
+
