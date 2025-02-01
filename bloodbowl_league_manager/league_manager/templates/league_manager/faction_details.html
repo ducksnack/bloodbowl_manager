@@ -34,8 +34,13 @@
                 <td>{{ type.strength }}</td>
                 <td>{{ type.agility }}</td>
                 <td>{{ type.armour }}</td>
-                <td>{% for skill in type.starting_skills %}{{skill}}{% endfor %}
-                    {{ type.starting_skills }}</td>
+                <td>
+                    {% for skill in type.starting_skills.values %}
+                        <span data-bs-toggle="popover" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name }}
+                        {% if not forloop.last %}, {% endif %}
+                        </span>
+                    {% endfor %}
+                </td>
                 <td>
                     {% if type.normal_skill_access %}
                         <a href="{% url 'skills_overview' %}?{% for skill in type.normal_skill_access %}category={{ skill }}&{% endfor %}">
@@ -64,4 +69,11 @@
         </tr>
     </table>
 </div>
+
+<script>
+    //Script for enabling popovers
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+</script>
+
 {% endblock %}
