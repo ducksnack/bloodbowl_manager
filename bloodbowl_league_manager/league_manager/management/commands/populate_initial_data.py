@@ -6,8 +6,8 @@ class Command(BaseCommand):
     help = 'Populate database with initial data for player types, factions, injury types, and level-up types'
     
     def handle(self, *args, **kwargs):
-        self.populate_factions()
-        self.populate_player_types()
+        factions = self.populate_factions()
+        self.populate_player_types(factions)
         self.populate_injury_types()
         self.populate_level_up_types()
 
@@ -15,64 +15,58 @@ class Command(BaseCommand):
 
     def populate_factions(self):
 
+        # 🚀 Step 1: Clear existing data
+        Faction.objects.all().delete()
+        self.stdout.write(self.style.WARNING("Cleared all existing factions."))
+
         factions = [
-            {"name": "Amazon", "reroll": 50, "apo": True},
-            {"name": "Chaos", "reroll": 60, "apo": True},
-            {"name": "Chaos Dwarf", "reroll": 70, "apo": True},
-            {"name": "Dark Elf", "reroll": 50, "apo": True},
-            {"name": "Dwarf", "reroll": 50, "apo": True},
-            {"name": "Elf", "reroll": 50, "apo": True},
-            {"name": "Goblin", "reroll": 60, "apo": True},
-            {"name": "Halfling", "reroll": 60, "apo": True},
-            {"name": "High Elf", "reroll": 50, "apo": True},
-            {"name": "Human", "reroll": 50, "apo": True},
-            {"name": "Khemri", "reroll": 70, "apo": False},
-            {"name": "Lizardman", "reroll": 60, "apo": True},
-            {"name": "Necromantic", "reroll": 70, "apo": False},
-            {"name": "Norse", "reroll": 60, "apo": True},
-            {"name": "Nurgle", "reroll": 70, "apo": False},
-            {"name": "Ogre", "reroll": 70, "apo": True},
-            {"name": "Orc", "reroll": 60, "apo": True},
-            {"name": "Skaven", "reroll": 60, "apo": True},
-            {"name": "Undead", "reroll": 70, "apo": False},
-            {"name": "Vampire", "reroll": 70, "apo": True},
-            {"name": "Wood Elf", "reroll": 50, "apo": True},
+            {"name": "Amazon", "reroll": 50, "apo": True, "icon": "league_manager/icons/amazon.png"},
+            {"name": "Chaos Chosen", "reroll": 60, "apo": True, "icon": "league_manager/icons/chaos-chosen.png"},
+            {"name": "Chaos Dwarf", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-dwarf.png"},
+            {"name": "Chaos Renegade", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-renegade.png"},
+            {"name": "Dark Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/dark-elf.png"},
+            {"name": "Dwarf", "reroll": 50, "apo": True, "icon": "league_manager/icons/dwarf.png"},
+            {"name": "Elven Union", "reroll": 50, "apo": True, "icon": "league_manager/icons/elven-union.png"},
+            {"name": "Goblin", "reroll": 60, "apo": True, "icon": "league_manager/icons/goblin.png"},
+            {"name": "Halfling", "reroll": 60, "apo": True, "icon": "league_manager/icons/halfling.png"},
+            {"name": "High Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/high-elf.png"},
+            {"name": "Human", "reroll": 50, "apo": True, "icon": "league_manager/icons/human.png"},
+            {"name": "Lizardmen", "reroll": 60, "apo": True, "icon": "league_manager/icons/lizardmen.png"},
+            {"name": "Necromantic Horror", "reroll": 70, "apo": False, "icon": "league_manager/icons/necromantic-horror.png"},
+            {"name": "Norse", "reroll": 60, "apo": True, "icon": "league_manager/icons/norse.png"},
+            {"name": "Nurgle", "reroll": 70, "apo": False, "icon": "league_manager/icons/nurgle.png"},
+            {"name": "Ogre", "reroll": 70, "apo": True, "icon": "league_manager/icons/ogre.png"},
+            {"name": "Old World Alliance", "reroll": 70, "apo": True, "icon": "league_manager/icons/old-world-alliance.png"},
+            {"name": "Orc", "reroll": 60, "apo": True, "icon": "league_manager/icons/orc.png"},
+            {"name": "Shambling Undead", "reroll": 70, "apo": False, "icon": "league_manager/icons/shambling-undead.png"},
+            {"name": "Skaven", "reroll": 60, "apo": True, "icon": "league_manager/icons/skaven.png"},
+            {"name": "Slann", "reroll": 50, "apo": True, "icon": "league_manager/icons/slann.png"},
+            {"name": "Snotling", "reroll": 50, "apo": True, "icon": "league_manager/icons/snotling.png"},
+            {"name": "Tomb Kings", "reroll": 70, "apo": False, "icon": "league_manager/icons/tomb-kings.png"},
+            {"name": "Underworld Denizens", "reroll": 50, "apo": True, "icon": "league_manager/icons/underworld-denizens.png"},
+            {"name": "Vampire", "reroll": 70, "apo": True, "icon": "league_manager/icons/vampire.png"},
+            {"name": "Wood Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/wood-elf.png"},
         ]
 
         for faction in factions:
-                obj, created = Faction.objects.get_or_create(faction_name=faction["name"], reroll_value=faction["reroll"], apo_available=faction["apo"])
+                obj, created = Faction.objects.get_or_create(
+                    faction_name=faction["name"], 
+                    reroll_value=faction["reroll"], 
+                    apo_available=faction["apo"],
+                    icon_path=faction["icon"]
+                )
                 if created:
                     self.stdout.write(self.style.SUCCESS(f"Added faction: {faction['name']}"))
                 else:
                     self.stdout.write(self.style.WARNING(f"Faction already exists: {faction['name']}"))
+        
+        return factions
 
     
-    def populate_player_types(self):
+    def populate_player_types(self, factions_list):
 
-        factions = {
-            "Amazon": get_object_or_404(Faction, faction_name="Amazon"),
-            "Chaos": get_object_or_404(Faction, faction_name="Chaos"),
-            "Chaos Dwarf": get_object_or_404(Faction, faction_name="Chaos Dwarf"),
-            "Dark Elf": get_object_or_404(Faction, faction_name="Dark Elf"),
-            "Dwarf": get_object_or_404(Faction, faction_name="Dwarf"),
-            "Elf": get_object_or_404(Faction, faction_name="Elf"),
-            "Goblin": get_object_or_404(Faction, faction_name="Goblin"),
-            "Halfling": get_object_or_404(Faction, faction_name="Halfling"),
-            "High Elf": get_object_or_404(Faction, faction_name="High Elf"),
-            "Human": get_object_or_404(Faction, faction_name="Human"),
-            "Khemri": get_object_or_404(Faction, faction_name="Khemri"),
-            "Lizardman": get_object_or_404(Faction, faction_name="Lizardman"),
-            "Necromantic": get_object_or_404(Faction, faction_name="Necromantic"),
-            "Norse": get_object_or_404(Faction, faction_name="Norse"),
-            "Nurgle": get_object_or_404(Faction, faction_name="Nurgle"),
-            "Ogre": get_object_or_404(Faction, faction_name="Ogre"),
-            "Orc": get_object_or_404(Faction, faction_name="Orc"),
-            "Skaven": get_object_or_404(Faction, faction_name="Skaven"),
-            "Undead": get_object_or_404(Faction, faction_name="Undead"),
-            "Vampire": get_object_or_404(Faction, faction_name="Vampire"),
-            "Wood Elf": get_object_or_404(Faction, faction_name="Wood Elf"),
-        }
-
+        # Dynamically generate dictionary of faction objects
+        factions = {faction["name"]: get_object_or_404(Faction, faction_name=faction["name"]) for faction in factions_list}
 
         player_types = [
             # Amazon
@@ -80,10 +74,10 @@ class Command(BaseCommand):
             {"name": "AmazonThrower", "faction": factions["Amazon"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Pass", "normal_skill_access": "GP", "double_skill_access": "AS"},
             {"name": "AmazonCatcher", "faction": factions["Amazon"], "position": "Catcher", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Catch", "normal_skill_access": "GA", "double_skill_access": "SP"},
             {"name": "AmazonBlitzer", "faction": factions["Amazon"], "position": "Blitzer", "max_quantity": 4, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Block", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            # Chaos
-            {"name": "ChaosBeastman", "faction": factions["Chaos"], "position": "Beastman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Horns", "normal_skill_access": "GSM", "double_skill_access": "AP"},
-            {"name": "ChaosChaosWarror", "faction": factions["Chaos"], "position": "Chaos Warrior", "max_quantity": 4, "price": 100, "movement": 5, "strength": 4, "agility": 3, "armour": 9, "starting_skills": "-", "normal_skill_access": "GSM", "double_skill_access": "AP"},
-            {"name": "ChaosMinotaur", "faction": factions["Chaos"], "position": "Minotaur", "max_quantity": 1, "price": 150, "movement": 5, "strength": 5, "agility": 2, "armour": 8, "starting_skills": "Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal", "normal_skill_access": "SM", "double_skill_access": "GAP"},
+            # Chaos Chosen
+            {"name": "ChaosBeastman", "faction": factions["Chaos Chosen"], "position": "Beastman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Horns", "normal_skill_access": "GSM", "double_skill_access": "AP"},
+            {"name": "ChaosChaosWarror", "faction": factions["Chaos Chosen"], "position": "Chaos Warrior", "max_quantity": 4, "price": 100, "movement": 5, "strength": 4, "agility": 3, "armour": 9, "starting_skills": "-", "normal_skill_access": "GSM", "double_skill_access": "AP"},
+            {"name": "ChaosMinotaur", "faction": factions["Chaos Chosen"], "position": "Minotaur", "max_quantity": 1, "price": 150, "movement": 5, "strength": 5, "agility": 2, "armour": 8, "starting_skills": "Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal", "normal_skill_access": "SM", "double_skill_access": "GAP"},
             # Chaos Dwarf
             {"name": "ChaosDwarfHobgoblin", "faction": factions["Chaos Dwarf"], "position": "Hobgoblin", "max_quantity": 16, "price": 40, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "-", "normal_skill_access": "G", "double_skill_access": "ASP"},
             {"name": "ChaosDwarfChaosDwarfBlocker", "faction": factions["Chaos Dwarf"], "position": "Chaos Dwarf Blocker", "max_quantity": 6, "price": 70, "movement": 4, "strength": 3, "agility": 2, "armour": 9, "starting_skills": "Block, Tackle, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "APM"},
@@ -99,13 +93,13 @@ class Command(BaseCommand):
             {"name": "DwarfBlocker", "faction": factions["Dwarf"], "position": "Blocker", "max_quantity": 16, "price": 70, "movement": 4, "strength": 3, "agility": 2, "armour": 9, "starting_skills": "Block, Tackle, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
             {"name": "DwarfRunner", "faction": factions["Dwarf"], "position": "Runner", "max_quantity": 2, "price": 80, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Sure Hands, Thick Skull", "normal_skill_access": "GP", "double_skill_access": "AS"},
             {"name": "DwarfBlitzer", "faction": factions["Dwarf"], "position": "Blitzer", "max_quantity": 2, "price": 80, "movement": 5, "strength": 3, "agility": 3, "armour": 9, "starting_skills": "Block, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            {"name": "DwarfTrollSlayer", "faction": factions["Dwarf"], "position": "TrollSlayer", "max_quantity": 2, "price": 90, "movement": 5, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Block, Dauntless, Frenzy, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "DwarfTrollSlayer", "faction": factions["Dwarf"], "position": "Troll Slayer", "max_quantity": 2, "price": 90, "movement": 5, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Block, Dauntless, Frenzy, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
             {"name": "DwarfDeathroller", "faction": factions["Dwarf"], "position": "Deathroller", "max_quantity": 1, "price": 160, "movement": 4, "strength": 7, "agility": 1, "armour": 10, "starting_skills": "Loner, Break Tackle, Dirty Player, Juggernaut, Mighty Blow, No Hands, Secret Weapon, Stand Firm", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # Elf
-            {"name": "ElfLineman", "faction": factions["Elf"], "position": "Lineman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "-", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "ElfThrower", "faction": factions["Elf"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Pass", "normal_skill_access": "GAP", "double_skill_access": "S"},
-            {"name": "ElfCatcher", "faction": factions["Elf"], "position": "Catcher", "max_quantity": 4, "price": 100, "movement": 8, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Catch, Nerves of Steel", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "ElfBlitzer", "faction": factions["Elf"], "position": "Blitzer", "max_quantity": 2, "price": 110, "movement": 7, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Block, Side Step", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "ElfLineman", "faction": factions["Elven Union"], "position": "Lineman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "-", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "ElfThrower", "faction": factions["Elven Union"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Pass", "normal_skill_access": "GAP", "double_skill_access": "S"},
+            {"name": "ElfCatcher", "faction": factions["Elven Union"], "position": "Catcher", "max_quantity": 4, "price": 100, "movement": 8, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Catch, Nerves of Steel", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "ElfBlitzer", "faction": factions["Elven Union"], "position": "Blitzer", "max_quantity": 2, "price": 110, "movement": 7, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Block, Side Step", "normal_skill_access": "GA", "double_skill_access": "SP"},
             # Goblin
             {"name": "GoblinGoblin", "faction": factions["Goblin"], "position": "Goblin", "max_quantity": 16, "price": 40, "movement": 6, "strength": 2, "agility": 3, "armour": 7, "starting_skills": "Dodge, Right Stuff, Stunty", "normal_skill_access": "A", "double_skill_access": "GSP"},
             {"name": "GoblinBombardier", "faction": factions["Goblin"], "position": "Bombardier", "max_quantity": 1, "price": 40, "movement": 6, "strength": 2, "agility": 3, "armour": 7, "starting_skills": "Bombardier, Dodge, Secret Weapon, Stunty", "normal_skill_access": "A", "double_skill_access": "GSP"},
@@ -128,20 +122,20 @@ class Command(BaseCommand):
             {"name": "HumanBlitzer", "faction": factions["Human"], "position": "Blitzer", "max_quantity": 4, "price": 90, "movement": 7, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Block", "normal_skill_access": "GS", "double_skill_access": "AP"},
             {"name": "HumanOgre", "faction": factions["Human"], "position": "Ogre", "max_quantity": 1, "price": 140, "movement": 5, "strength": 5, "agility": 2, "armour": 9, "starting_skills": "Loner, Bone-head, Mighty Blow, Thick Skull, Throw Team-Mate", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # Khemri
-            {"name": "KhemriSkeleton", "faction": factions["Khemri"], "position": "Skeleton", "max_quantity": 16, "price": 40, "movement": 5, "strength": 3, "agility": 2, "armour": 7, "starting_skills": "Regeneration, Thick Skull", "normal_skill_access": "G", "double_skill_access": "ASP"},
-            {"name": "KhemriThro-Ra", "faction": factions["Khemri"], "position": "Thro-Ra", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 2, "armour": 7, "starting_skills": "Pass, Regeneration, Sure Hands", "normal_skill_access": "GP", "double_skill_access": "AS"},
-            {"name": "KhemriBlitz-Ra", "faction": factions["Khemri"], "position": "Blitz-Ra", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Block, Regeneration", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            {"name": "KhemriTombuardian", "faction": factions["Khemri"], "position": "Tomb Guardian", "max_quantity": 4, "price": 100, "movement": 4, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Decay, Regeneration", "normal_skill_access": "S", "double_skill_access": "GAP"},
+            {"name": "KhemriSkeleton", "faction": factions["Tomb Kings"], "position": "Skeleton", "max_quantity": 16, "price": 40, "movement": 5, "strength": 3, "agility": 2, "armour": 7, "starting_skills": "Regeneration, Thick Skull", "normal_skill_access": "G", "double_skill_access": "ASP"},
+            {"name": "KhemriThro-Ra", "faction": factions["Tomb Kings"], "position": "Thro-Ra", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 2, "armour": 7, "starting_skills": "Pass, Regeneration, Sure Hands", "normal_skill_access": "GP", "double_skill_access": "AS"},
+            {"name": "KhemriBlitz-Ra", "faction": factions["Tomb Kings"], "position": "Blitz-Ra", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Block, Regeneration", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "KhemriTombuardian", "faction": factions["Tomb Kings"], "position": "Tomb Guardian", "max_quantity": 4, "price": 100, "movement": 4, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Decay, Regeneration", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # Lizardman
-            {"name": "LizardmanSkink", "faction": factions["Lizardman"], "position": "Skink", "max_quantity": 16, "price": 60, "movement": 8, "strength": 2, "agility": 3, "armour": 7, "starting_skills": "Dodge, Stunty", "normal_skill_access": "A", "double_skill_access": "GSP"},
-            {"name": "LizardmanSaurus", "faction": factions["Lizardman"], "position": "Saurus", "max_quantity": 6, "price": 80, "movement": 6, "strength": 4, "agility": 1, "armour": 9, "starting_skills": "-", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            {"name": "LizardmanKroxigor", "faction": factions["Lizardman"], "position": "Kroxigor", "max_quantity": 1, "price": 140, "movement": 6, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Loner, Bone-head, Mighty Blow, Prehensile Tail, Thick Skull", "normal_skill_access": "S", "double_skill_access": "GAP"},
+            {"name": "LizardmanSkink", "faction": factions["Lizardmen"], "position": "Skink", "max_quantity": 16, "price": 60, "movement": 8, "strength": 2, "agility": 3, "armour": 7, "starting_skills": "Dodge, Stunty", "normal_skill_access": "A", "double_skill_access": "GSP"},
+            {"name": "LizardmanSaurus", "faction": factions["Lizardmen"], "position": "Saurus", "max_quantity": 6, "price": 80, "movement": 6, "strength": 4, "agility": 1, "armour": 9, "starting_skills": "-", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "LizardmanKroxigor", "faction": factions["Lizardmen"], "position": "Kroxigor", "max_quantity": 1, "price": 140, "movement": 6, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Loner, Bone-head, Mighty Blow, Prehensile Tail, Thick Skull", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # Necromantic
-            {"name": "NecromanticZombie", "faction": factions["Necromantic"], "position": "Zombie", "max_quantity": 16, "price": 40, "movement": 4, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Regeneration", "normal_skill_access": "G", "double_skill_access": "ASP"},
-            {"name": "NecromanticGhoul", "faction": factions["Necromantic"], "position": "Ghoul", "max_quantity": 2, "price": 70, "movement": 7, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "NecromanticWight", "faction": factions["Necromantic"], "position": "Wight", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Block, Regeneration", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            {"name": "NecromanticFleshGolem", "faction": factions["Necromantic"], "position": "Flesh Golem", "max_quantity": 2, "price": 110, "movement": 4, "strength": 4, "agility": 2, "armour": 9, "starting_skills": "Regeneration, Stand Firm, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            {"name": "NecromanticWerewolf", "faction": factions["Necromantic"], "position": "Werewolf", "max_quantity": 2, "price": 120, "movement": 8, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Claws, Frenzy, Regeneration", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "NecromanticZombie", "faction": factions["Necromantic Horror"], "position": "Zombie", "max_quantity": 16, "price": 40, "movement": 4, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Regeneration", "normal_skill_access": "G", "double_skill_access": "ASP"},
+            {"name": "NecromanticGhoul", "faction": factions["Necromantic Horror"], "position": "Ghoul", "max_quantity": 2, "price": 70, "movement": 7, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "NecromanticWight", "faction": factions["Necromantic Horror"], "position": "Wight", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Block, Regeneration", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "NecromanticFleshGolem", "faction": factions["Necromantic Horror"], "position": "Flesh Golem", "max_quantity": 2, "price": 110, "movement": 4, "strength": 4, "agility": 2, "armour": 9, "starting_skills": "Regeneration, Stand Firm, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "NecromanticWerewolf", "faction": factions["Necromantic Horror"], "position": "Werewolf", "max_quantity": 2, "price": 120, "movement": 8, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Claws, Frenzy, Regeneration", "normal_skill_access": "GA", "double_skill_access": "SP"},
             # Norse
             {"name": "NorseLineman", "faction": factions["Norse"], "position": "Lineman", "max_quantity": 16, "price": 50, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Block", "normal_skill_access": "G", "double_skill_access": "ASP"},
             {"name": "NorseThrower", "faction": factions["Norse"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Block, Pass", "normal_skill_access": "GP", "double_skill_access": "AS"},
@@ -171,11 +165,11 @@ class Command(BaseCommand):
             {"name": "SkavenBlitzer", "faction": factions["Skaven"], "position": "Blitzer", "max_quantity": 2, "price": 80, "movement": 7, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Block", "normal_skill_access": "GS", "double_skill_access": "APM"},
             {"name": "SkavenRatOgre", "faction": factions["Skaven"], "position": "Rat Ogre", "max_quantity": 1, "price": 150, "movement": 6, "strength": 5, "agility": 2, "armour": 8, "starting_skills": "Loner, Frenzy, Mighty Blow, Prehensile Tail, Wild Animal", "normal_skill_access": "S", "double_skill_access": "GAPM"},
             # Undead
-            {"name": "UndeadSkeleton", "faction": factions["Undead"], "position": "Skeleton", "max_quantity": 16, "price": 40, "movement": 5, "strength": 3, "agility": 2, "armour": 7, "starting_skills": "Regeneration, Thick Skull", "normal_skill_access": "G", "double_skill_access": "ASP"},
-            {"name": "UndeadZombie", "faction": factions["Undead"], "position": "Zombie", "max_quantity": 16, "price": 40, "movement": 4, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Regeneration", "normal_skill_access": "G", "double_skill_access": "ASP"},
-            {"name": "UndeadGhoul", "faction": factions["Undead"], "position": "Ghoul", "max_quantity": 4, "price": 70, "movement": 7, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge", "normal_skill_access": "GA", "double_skill_access": "SP"},
-            {"name": "UndeadWight", "faction": factions["Undead"], "position": "Wight", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Block, Regeneration", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            {"name": "UndeadMummy", "faction": factions["Undead"], "position": "Mummy", "max_quantity": 2, "price": 120, "movement": 3, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Mighty Blow, Regeneration", "normal_skill_access": "S", "double_skill_access": "GAP"},
+            {"name": "UndeadSkeleton", "faction": factions["Shambling Undead"], "position": "Skeleton", "max_quantity": 16, "price": 40, "movement": 5, "strength": 3, "agility": 2, "armour": 7, "starting_skills": "Regeneration, Thick Skull", "normal_skill_access": "G", "double_skill_access": "ASP"},
+            {"name": "UndeadZombie", "faction": factions["Shambling Undead"], "position": "Zombie", "max_quantity": 16, "price": 40, "movement": 4, "strength": 3, "agility": 2, "armour": 8, "starting_skills": "Regeneration", "normal_skill_access": "G", "double_skill_access": "ASP"},
+            {"name": "UndeadGhoul", "faction": factions["Shambling Undead"], "position": "Ghoul", "max_quantity": 4, "price": 70, "movement": 7, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge", "normal_skill_access": "GA", "double_skill_access": "SP"},
+            {"name": "UndeadWight", "faction": factions["Shambling Undead"], "position": "Wight", "max_quantity": 2, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Block, Regeneration", "normal_skill_access": "GS", "double_skill_access": "AP"},
+            {"name": "UndeadMummy", "faction": factions["Shambling Undead"], "position": "Mummy", "max_quantity": 2, "price": 120, "movement": 3, "strength": 5, "agility": 1, "armour": 9, "starting_skills": "Mighty Blow, Regeneration", "normal_skill_access": "S", "double_skill_access": "GAP"},
             # Vampire
             {"name": "VampireThrall", "faction": factions["Vampire"], "position": "Thrall", "max_quantity": 16, "price": 40, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "-", "normal_skill_access": "G", "double_skill_access": "ASP"},
             {"name": "VampireVampire", "faction": factions["Vampire"], "position": "Vampire", "max_quantity": 6, "price": 110, "movement": 6, "strength": 4, "agility": 4, "armour": 8, "starting_skills": "Blood Lust, Hypnotic Gaze, Regeneration", "normal_skill_access": "GAS", "double_skill_access": "P"},

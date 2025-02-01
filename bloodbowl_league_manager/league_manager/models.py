@@ -12,6 +12,8 @@ class Faction(models.Model):
     faction_name = models.CharField(max_length=100)
     reroll_value = models.IntegerField()
     apo_available = models.BooleanField(default=True)
+    icon_path = models.CharField(max_length=255, blank=True)
+
 
     def __str__(self):
         return self.faction_name

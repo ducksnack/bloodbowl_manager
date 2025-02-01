@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Faction, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
@@ -23,8 +24,9 @@ def teams(request):
     return render(request, 'league_manager/teams.html', {'teams': teams})
 
 def factions(request):
-    factions = Faction.objects.all()
-    return render(request, 'league_manager/factions.html', {'factions' : factions})
+    factions = Faction.objects.values_list('faction_name', flat=True)  # Query only names
+    return render(request, "league_manager/factions.html", {"factions_json": json.dumps(list(factions))})
+
 
 def create_league(request):
     if request.method == 'POST':
@@ -145,8 +147,6 @@ def add_level_up(request, player_id):
     }
 
     return render(request, "league_manager/level_up.html", context)
-
-
 
 
 def modify_player_old(request, player_id):
