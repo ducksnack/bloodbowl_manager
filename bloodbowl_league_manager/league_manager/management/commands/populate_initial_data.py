@@ -6,8 +6,8 @@ class Command(BaseCommand):
     help = 'Populate database with initial data for player types, factions, injury types, and level-up types'
     
     def handle(self, *args, **kwargs):
-        self.populate_factions()
-        self.populate_player_types()
+        factions = self.populate_factions()
+        self.populate_player_types(factions)
         self.populate_injury_types()
         self.populate_level_up_types()
 
@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
         factions = [
             {"name": "Amazon", "reroll": 50, "apo": True},
-            {"name": "Chaos", "reroll": 60, "apo": True},
+            {"name": "Chaos Chosen", "reroll": 60, "apo": True},
             {"name": "Chaos Dwarf", "reroll": 70, "apo": True},
             {"name": "Dark Elf", "reroll": 50, "apo": True},
             {"name": "Dwarf", "reroll": 50, "apo": True},
@@ -45,34 +45,14 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.SUCCESS(f"Added faction: {faction['name']}"))
                 else:
                     self.stdout.write(self.style.WARNING(f"Faction already exists: {faction['name']}"))
+        
+        return factions
 
     
-    def populate_player_types(self):
+    def populate_player_types(self, factions_list):
 
-        factions = {
-            "Amazon": get_object_or_404(Faction, faction_name="Amazon"),
-            "Chaos": get_object_or_404(Faction, faction_name="Chaos"),
-            "Chaos Dwarf": get_object_or_404(Faction, faction_name="Chaos Dwarf"),
-            "Dark Elf": get_object_or_404(Faction, faction_name="Dark Elf"),
-            "Dwarf": get_object_or_404(Faction, faction_name="Dwarf"),
-            "Elf": get_object_or_404(Faction, faction_name="Elf"),
-            "Goblin": get_object_or_404(Faction, faction_name="Goblin"),
-            "Halfling": get_object_or_404(Faction, faction_name="Halfling"),
-            "High Elf": get_object_or_404(Faction, faction_name="High Elf"),
-            "Human": get_object_or_404(Faction, faction_name="Human"),
-            "Khemri": get_object_or_404(Faction, faction_name="Khemri"),
-            "Lizardman": get_object_or_404(Faction, faction_name="Lizardman"),
-            "Necromantic": get_object_or_404(Faction, faction_name="Necromantic"),
-            "Norse": get_object_or_404(Faction, faction_name="Norse"),
-            "Nurgle": get_object_or_404(Faction, faction_name="Nurgle"),
-            "Ogre": get_object_or_404(Faction, faction_name="Ogre"),
-            "Orc": get_object_or_404(Faction, faction_name="Orc"),
-            "Skaven": get_object_or_404(Faction, faction_name="Skaven"),
-            "Undead": get_object_or_404(Faction, faction_name="Undead"),
-            "Vampire": get_object_or_404(Faction, faction_name="Vampire"),
-            "Wood Elf": get_object_or_404(Faction, faction_name="Wood Elf"),
-        }
-
+        # Dynamically generate dictionary of faction objects
+        factions = {faction["name"]: get_object_or_404(Faction, faction_name=faction["name"]) for faction in factions_list}
 
         player_types = [
             # Amazon
@@ -80,10 +60,10 @@ class Command(BaseCommand):
             {"name": "AmazonThrower", "faction": factions["Amazon"], "position": "Thrower", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Pass", "normal_skill_access": "GP", "double_skill_access": "AS"},
             {"name": "AmazonCatcher", "faction": factions["Amazon"], "position": "Catcher", "max_quantity": 2, "price": 70, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Catch", "normal_skill_access": "GA", "double_skill_access": "SP"},
             {"name": "AmazonBlitzer", "faction": factions["Amazon"], "position": "Blitzer", "max_quantity": 4, "price": 90, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "Dodge, Block", "normal_skill_access": "GS", "double_skill_access": "AP"},
-            # Chaos
-            {"name": "ChaosBeastman", "faction": factions["Chaos"], "position": "Beastman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Horns", "normal_skill_access": "GSM", "double_skill_access": "AP"},
-            {"name": "ChaosChaosWarror", "faction": factions["Chaos"], "position": "Chaos Warrior", "max_quantity": 4, "price": 100, "movement": 5, "strength": 4, "agility": 3, "armour": 9, "starting_skills": "-", "normal_skill_access": "GSM", "double_skill_access": "AP"},
-            {"name": "ChaosMinotaur", "faction": factions["Chaos"], "position": "Minotaur", "max_quantity": 1, "price": 150, "movement": 5, "strength": 5, "agility": 2, "armour": 8, "starting_skills": "Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal", "normal_skill_access": "SM", "double_skill_access": "GAP"},
+            # Chaos Chosen
+            {"name": "ChaosBeastman", "faction": factions["Chaos Chosen"], "position": "Beastman", "max_quantity": 16, "price": 60, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "Horns", "normal_skill_access": "GSM", "double_skill_access": "AP"},
+            {"name": "ChaosChaosWarror", "faction": factions["Chaos Chosen"], "position": "Chaos Warrior", "max_quantity": 4, "price": 100, "movement": 5, "strength": 4, "agility": 3, "armour": 9, "starting_skills": "-", "normal_skill_access": "GSM", "double_skill_access": "AP"},
+            {"name": "ChaosMinotaur", "faction": factions["Chaos Chosen"], "position": "Minotaur", "max_quantity": 1, "price": 150, "movement": 5, "strength": 5, "agility": 2, "armour": 8, "starting_skills": "Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal", "normal_skill_access": "SM", "double_skill_access": "GAP"},
             # Chaos Dwarf
             {"name": "ChaosDwarfHobgoblin", "faction": factions["Chaos Dwarf"], "position": "Hobgoblin", "max_quantity": 16, "price": 40, "movement": 6, "strength": 3, "agility": 3, "armour": 7, "starting_skills": "-", "normal_skill_access": "G", "double_skill_access": "ASP"},
             {"name": "ChaosDwarfChaosDwarfBlocker", "faction": factions["Chaos Dwarf"], "position": "Chaos Dwarf Blocker", "max_quantity": 6, "price": 70, "movement": 4, "strength": 3, "agility": 2, "armour": 9, "starting_skills": "Block, Tackle, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "APM"},
