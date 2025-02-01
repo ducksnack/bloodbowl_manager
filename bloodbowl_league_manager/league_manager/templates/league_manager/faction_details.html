@@ -36,9 +36,7 @@
                 <td>{{ type.armour }}</td>
                 <td>
                     {% for skill in type.starting_skills.values %}
-                        <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name }}
-                        {% if not forloop.last %}, {% endif %}
-                        </a>
+                        <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name}}{% if not forloop.last %}, {% endif %}</a>
                     {% endfor %}
                 </td>
                 <td>
