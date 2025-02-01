@@ -333,3 +333,11 @@ class LevelUp(models.Model):
     def __str__(self):
         return f'{self.player} ({self.player.team}), {self.level_up_type}'
 
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    category = models.CharField(max_length=20, default="")
+    description = models.TextField()
+    
+
+    def __str__(self):
+        return self.name
