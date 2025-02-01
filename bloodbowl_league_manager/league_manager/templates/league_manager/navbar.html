@@ -1,64 +1,83 @@
-<div class="w-25 min-vh-100 bg-dark text-white p-4 custom_navbar">
-    <h2 class="text-center text-light">Menu</h2>
-    <ul class="list-unstyled">
-        <li><a href="{% url 'index' %}" class="text-white d-block p-2">🏠 Home</a></li>
-        
-        <!-- Expandable Teams Section -->
-        <li>
-            <a href="#" class="text-white d-block p-2" onclick="toggleDropdown(event, 'teams-dropdown', 'teams-menu')">⚽ Teams ▼</a>
-            <ul id="teams-dropdown" class="list-unstyled ms-3 collapse">
-                <li><a href="{% url 'teams' %}" class="text-white d-block p-2">📋 Show Teams</a></li>
-                <li><a href="{% url 'create_team' %}" class="text-white d-block p-2">➕ Create New Team</a></li>
-            </ul>
-        </li>
-        
-        <!-- Expandable Leagues Section -->
-        <li>
-            <a href="#" class="text-white d-block p-2" onclick="toggleDropdown(event, 'leagues-dropdown', 'leagues-menu')">🏆 Leagues ▼</a>
-            <ul id="leagues-dropdown" class="list-unstyled ms-3 collapse">
-                <li><a href="{% url 'leagues' %}" class="text-white d-block p-2">📜 Show Leagues</a></li>
-                <li><a href="{% url 'create_league' %}" class="text-white d-block p-2">➕ Create New League</a></li>
-            </ul>
-        </li>
-        
-        <li><a href="{% url 'factions' %}" class="text-white d-block p-2">🛡️ Factions</a></li>
-    </ul>
+<!-- Sidebar Toggle Button (for mobile) -->
+<button class="btn btn-dark d-lg-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+    ☰ Menu
+</button>
+
+<!-- Sidebar -->
+<div class="offcanvas-lg offcanvas-start bg-dark text-white p-3 vh-100 col-lg-1" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title text-light" id="sidebarMenuLabel">Menu</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <ul class="nav flex-column">
+            <!-- Home -->
+            <li class="nav-item">
+                <a href="{% url 'index' %}" class="nav-link text-white">🏠 Home</a>
+            </li>
+
+            <!-- Teams Dropdown -->
+            <li class="nav-item">
+                <a class="nav-link text-white" data-bs-toggle="collapse" href="#teamsDropdown" role="button" aria-expanded="false" aria-controls="teamsDropdown">
+                    ⚽ Teams ▼
+                </a>
+                <div class="collapse" id="teamsDropdown">
+                    <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                            <a href="{% url 'teams' %}" class="nav-link text-white">📋 Show Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'create_team' %}" class="nav-link text-white">➕ Create New Team</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Leagues Dropdown -->
+            <li class="nav-item">
+                <a class="nav-link text-white" data-bs-toggle="collapse" href="#leaguesDropdown" role="button" aria-expanded="false" aria-controls="leaguesDropdown">
+                    🏆 Leagues ▼
+                </a>
+                <div class="collapse" id="leaguesDropdown">
+                    <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                            <a href="{% url 'leagues' %}" class="nav-link text-white">📜 Show Leagues</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'create_league' %}" class="nav-link text-white">➕ Create New League</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Factions -->
+            <li class="nav-item">
+                <a href="{% url 'factions' %}" class="nav-link text-white">🛡️ Factions</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
+<!-- Simple script to retain collapsed status when navigating to new page -->
 <script>
-    function toggleDropdown(event, dropdownId) {
-        event.preventDefault();
-        let dropdown = document.getElementById(dropdownId);
-        dropdown.classList.toggle("collapse");
-
-        // Store expanded state in localStorage
-        if (dropdown.classList.contains("collapse") == false) {
-            localStorage.setItem(dropdownId, "open");
-        } else {
-            localStorage.removeItem(dropdownId);
-        }
-    }
-
-    // Function to restore dropdown state on page load
-    function restoreDropdownState() {
-        let dropdowns = ["teams-dropdown", "leagues-dropdown"];
+    document.addEventListener("DOMContentLoaded", function () {
+        // Restore dropdown state from localStorage
+        let dropdowns = ["teamsDropdown", "leaguesDropdown"];
         dropdowns.forEach(id => {
             if (localStorage.getItem(id) === "open") {
-                document.getElementById(id).classList.toggle("collapse");
+                document.getElementById(id).classList.add("show");
             }
         });
-    }
 
-    // Restore state when page loads
-    document.addEventListener("DOMContentLoaded", restoreDropdownState);
-
+        // Listen for collapse events to store state
+        document.querySelectorAll('.collapse').forEach(item => {
+            item.addEventListener('shown.bs.collapse', function () {
+                localStorage.setItem(this.id, "open");
+            });
+            item.addEventListener('hidden.bs.collapse', function () {
+                localStorage.removeItem(this.id);
+            });
+        });
+    });
 </script>
-
-<style>
-    .collapse {
-        display: none;
-    }
-    .collapse.show {
-        display: block;
-    }
-</style>
