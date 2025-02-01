@@ -22,7 +22,7 @@ class Command(BaseCommand):
         factions = [
             {"name": "Amazon", "reroll": 50, "apo": True, "icon": "league_manager/icons/amazon.png"},
             {"name": "Chaos Chosen", "reroll": 60, "apo": True, "icon": "league_manager/icons/chaos-chosen.png"},
-            {"name": "Chaos Dwarf", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-dwarf.png"},
+            {"name": "Chaos Dwarf", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-dwarves.png"},
             {"name": "Chaos Renegade", "reroll": 70, "apo": True, "icon": "league_manager/icons/chaos-renegade.png"},
             {"name": "Dark Elf", "reroll": 50, "apo": True, "icon": "league_manager/icons/dark-elf.png"},
             {"name": "Dwarf", "reroll": 50, "apo": True, "icon": "league_manager/icons/dwarf.png"},
