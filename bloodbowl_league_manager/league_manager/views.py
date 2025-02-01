@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Faction, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
+from .models import Faction, Skill, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
 from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm, LeagueForm
 from django.db.models import Count, Q, F
 
@@ -624,11 +624,30 @@ def add_injury(request, match_id, team_id):
     return render(request, 'league_manager/add_injury.html', context)
 
 def skills_overview(request):
+
+    SKILL_CATEGORIES = {
+        "G": "General",
+        "A": "Agility",
+        "S": "Strength",
+        "P": "Passing",
+        "M": "Mutation",
+        "E": "Extraordinary",
+    }
+
     categories = request.GET.getlist("category")  # Get category from query parameter
-    if categories:
-        skills = LevelUpType.objects.filter(category__in=categories)  # Filter by multiple categories
+
+    # Convert category abbreviations (e.g., "P") to full names (e.g., "Passing")
+    normalized_categories = set()
+    for cat in categories:
+        if cat in SKILL_CATEGORIES:  # If it's an abbreviation, convert it
+            normalized_categories.add(SKILL_CATEGORIES[cat])
+        else:  # Otherwise, assume it's already the full category name
+            normalized_categories.add(cat)
+
+    if normalized_categories:
+        skills = Skill.objects.filter(category__in=normalized_categories)  # Filter by multiple categories
     else:
-        skills = LevelUpType.objects.all()  # Show all skills by default
+        skills = Skill.objects.all()  # Show all skills by default
     
     context = {"skills": skills, "selected_categories": categories}
     return render(request, "league_manager/skills.html", context)
