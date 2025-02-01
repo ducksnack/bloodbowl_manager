@@ -29,11 +29,7 @@
             <tr>
                 <td><img src="{% static 'league_manager/icons/faction_postional_icons/' %}{{ type.name|lower }}.png" /></td>
                 <td> 0 - {{ type.max_quantity }}</td>
-                <td>
-                    <script>
-                        document.write("{{ type.name }}".replace(/([a-z])([A-Z])/g, "$1 $2"));
-                    </script>
-                </td>
+                <td>{{ type.position }}</td>
                 <td>{{ type.movement }}</td>
                 <td>{{ type.strength }}</td>
                 <td>{{ type.agility }}</td>
