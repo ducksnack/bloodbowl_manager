@@ -35,8 +35,20 @@
                 <td>{{ type.agility }}</td>
                 <td>{{ type.armour }}</td>
                 <td>{{ type.starting_skills }}</td>
-                <td>{{ type.normal_skill_access }}</td>
-                <td>{{ type.double_skill_access }}</td>
+                <td>
+                    {% if type.normal_skill_access %}
+                        <a href="{% url 'skills_overview' %}?{% for skill in type.normal_skill_access %}category={{ skill }}&{% endfor %}">
+                            {{ type.normal_skill_access|join:"" }}
+                        </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if type.double_skill_access %}
+                        <a href="{% url 'skills_overview' %}?{% for skill in type.double_skill_access %}category={{ skill }}&{% endfor %}">
+                            {{ type.double_skill_access|join:"" }}
+                        </a>
+                    {% endif %}
+                </td>
                 <td>{{ type.price }}k</td>
             </tr>
             {% endfor %}
