@@ -245,6 +245,7 @@ This player is very skilled at holding off would-be attackers. Opposing
 players may not follow-up blocks made against this player even if the
 Fend player is Knocked Down. The opposing player may still continue
 moving after blocking if he had declared a Blitz Action.
+
 Foul Appearance (Mutation)
 The player’s appearance is so horrible that any opposing player that
 wants to block the player (or use a special attack that takes the place of
@@ -293,6 +294,7 @@ be used in a Blizzard or with the Throw Team-Mate skill.
 Horns (Mutation)
 A player with Horns may use them to butt an opponent. Horns adds 1 to
 the player’s Strength for any block(s) he makes during a Blitz Action.
+
 Hypnotic Gaze (Extraordinary)
 The player has a powerful telepathic ability that he can use to stun an
 opponent into immobility. The player may use hypnotic gaze at the end of
@@ -401,7 +403,7 @@ catch roll automatically, either because he literally has no hands or
 because his hands are full. If he attempts to pick up the ball then it will
 bounce, and will cause a turnover if it is his team’s turn.
 
-Nurgle’s Rot (Extraordinary)
+Nurgle's Rot (Extraordinary)
 This player has a horrible infectious disease which spreads when he kills
 an opponent during a Block, Blitz or Foul Action. Instead of truly dying,
 the infected opponent becomes a new rookie Rotter. To do so, the
@@ -597,6 +599,7 @@ When a player with this skill blocks an opponent with the ball, applying a
 ‘Pushed’ or ‘Defender Stumbles’ result will cause the opposing player to
 drop the ball in the square that they are pushed to, even if the opposing
 player is not Knocked Down.
+
 Strong Arm (Strength)
 The player may add 1 to the D6 when he passes to Short, Long or Long
 Bomb range.
