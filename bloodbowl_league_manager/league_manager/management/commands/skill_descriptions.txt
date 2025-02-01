@@ -146,6 +146,7 @@ add 3 to his Armour roll. This skill may only be used once per turn (e.g.,
 cannot be used with Frenzy or Multiple Block) and if used as part of a
 Blitz Action, the player cannot continue moving after using it. Casualties
 caused by a chainsaw player do not count for Star Player points.
+
 Claw / Claws (Mutation)
 A player with this skill is blessed with a huge crab-like claw or razor
 sharp talons that make armour useless. When an opponent is Knocked
@@ -278,6 +279,7 @@ Guard (Strength)
 A player with this skill assists an offensive or defensive block even if he
 is in another player’s tackle zone. This skill may not be used to assist a
 foul.
+
 Hail Mary Pass (Passing)
 The player may throw the ball to any square on the playing pitch, no
 matter what the range: the range ruler is not used. Roll a D6. On a roll of
@@ -392,6 +394,7 @@ must still be on his feet after the first block.
 Nerves of Steel (Passing)
 The player ignores modifiers for enemy tackle zones when he attempts
 to pass, catch or intercept.
+
 No Hands (Extraordinary)
 The player is unable to pick up, intercept or carry the ball and will fail any
 catch roll automatically, either because he literally has no hands or
@@ -581,6 +584,7 @@ This player is armed with special stakes that are blessed to cause extra
 damage to the Undead and those that work with them. This player may
 add 1 to the Armour roll when they make a Stab attack against any
 player playing for a Khemri, Necromantic, Undead or Vampire team.
+
 Stand Firm (Strength)
 A player with this skill may choose to not be pushed back as the result of
 a block. He may choose to ignore being pushed by ‘Pushed’ results, and

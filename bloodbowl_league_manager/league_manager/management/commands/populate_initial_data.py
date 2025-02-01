@@ -9,11 +9,11 @@ class Command(BaseCommand):
     help = 'Populate database with initial data for player types, factions, injury types, and level-up types'
     
     def handle(self, *args, **kwargs):
+        self.populate_skills()
         factions = self.populate_factions()
         self.populate_player_types(factions)
         self.populate_injury_types()
         self.populate_level_up_types()
-        self.populate_skills()
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
@@ -258,6 +258,11 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING(f"Level-up type already exists: {level_up_type['name']}"))
 
     def populate_skills(self):
+
+        # Clear existing data
+        Skill.objects.all().delete()
+        self.stdout.write(self.style.WARNING("Cleared all existing skills."))
+
         # Get the directory of the current script (populate_initial_data.py)
         current_dir = os.path.dirname(os.path.abspath(__file__))
 
