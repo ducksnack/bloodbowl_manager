@@ -6,9 +6,9 @@
 <div class="container py-4">
     <h1 class="text-center mb-4 fw-bold">Factions</h1>
     
-    <div class="row g-4"> <!-- Bootstrap grid with spacing -->
+    <div class="row g-4">
         {% for faction in factions %}
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3"> <!-- 3 per row on lg, 2 on md, 1 on sm -->
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                 <a href="{% url 'faction_details' faction.faction_name %}" class="text-decoration-none">
                     <div class="card shadow-sm border-0 text-center p-3">
                         <img src="{% static faction.icon_path %}" alt="{{ faction.faction_name }} icon"
