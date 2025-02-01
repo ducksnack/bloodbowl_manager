@@ -70,6 +70,10 @@ class Command(BaseCommand):
     
     def populate_player_types(self, factions_list):
 
+        # Clear existing data
+        PlayerType.objects.all().delete()
+        self.stdout.write(self.style.WARNING("Cleared all existing player types."))
+
         # Dynamically generate dictionary of faction objects
         factions = {faction["name"]: get_object_or_404(Faction, faction_name=faction["name"]) for faction in factions_list}
 
@@ -88,6 +92,9 @@ class Command(BaseCommand):
             {"name": "ChaosDwarfChaosDwarfBlocker", "faction": factions["Chaos Dwarf"], "position": "Chaos Dwarf Blocker", "max_quantity": 6, "price": 70, "movement": 4, "strength": 3, "agility": 2, "armour": 9, "starting_skills": "Block, Tackle, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "APM"},
             {"name": "ChaosDwarfBullCentaur", "faction": factions["Chaos Dwarf"], "position": "Bull Centaur", "max_quantity": 2, "price": 130, "movement": 6, "strength": 4, "agility": 2, "armour": 9, "starting_skills": "Sprint, Sure Feet, Thick Skull", "normal_skill_access": "GS", "double_skill_access": "AP"},
             {"name": "ChaosDwarfMinotaur", "faction": factions["Chaos Dwarf"], "position": "Minotaur", "max_quantity": 1, "price": 150, "movement": 5, "strength": 5, "agility": 2, "armour": 8, "starting_skills": "Loner, Frenzy, Horns, Mighty Blow, Thick SKull, Wild Animal", "normal_skill_access": "S", "double_skill_access": "GAPM"},
+            # Chaos Renegades
+            {"name": "RenegadeHumanLinemen", "faction": factions["Chaos Renegade"], "position": "Human Lineman", "max_quantity": 12, "price": 50, "movement": 6, "strength": 3, "agility": 3, "armour": 8, "starting_skills": "-", "normal_skill_access": "GSMP", "double_skill_access": "A"},
+            {"name": "RenegadeDarkElfLineman", "faction": factions["Chaos Renegade"], "position": "Dark Elf Lineman", "max_quantity": 1, "price": 70, "movement": 6, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "Animosity", "normal_skill_access": "GAM", "double_skill_access": "PS"},
             # Dark Elf
             {"name": "DarkElfLineman", "faction": factions["Dark Elf"], "position": "Lineman", "max_quantity": 16, "price": 70, "movement": 6, "strength": 3, "agility": 4, "armour": 8, "starting_skills": "-", "normal_skill_access": "GA", "double_skill_access": "SP"},
             {"name": "DarkElfRunner", "faction": factions["Dark Elf"], "position": "Runner", "max_quantity": 2, "price": 80, "movement": 7, "strength": 3, "agility": 4, "armour": 7, "starting_skills": "Dump-Off", "normal_skill_access": "GAP", "double_skill_access": "S"},
