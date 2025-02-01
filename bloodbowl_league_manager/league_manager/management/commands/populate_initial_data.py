@@ -128,14 +128,25 @@ class Command(BaseCommand):
                 double_skill_access = pt["double_skill_access"],
                 icon_path=pt["icon_path"])
             
-            # Convert skill access abbreviations into Skill objects
-            starting_skills = [SKILL_CATEGORY_MAP[c] for c in pt["starting_skills"] if c in SKILL_CATEGORY_MAP]
+            starting_skills_str = pt["starting_skills"]
+            if starting_skills_str and starting_skills_str != "-":
+                
+                # Split the string on commas and strip any extra whitespace
+                skill_names = [skill.strip() for skill in starting_skills_str.split(",")]
+                
+                # For each skill name, get (or create) the Skill object and add it to the m2m field
+                for skill_name in skill_names:
+                    try:
+                        # Adjust the lookup field to match your Skill model definition
+                        skill_obj, skill_created = Skill.objects.get_or_create(name=skill_name)
+                    except Exception as e:
+                        print(f"Error retrieving or creating skill '{skill_name}': {e}")
+                        continue
 
-            # Fetch Skill objects and assign to ManyToManyField
-            starting_skills_objs = Skill.objects.filter(category__in=starting_skills)
+                    # Add the skill to the player_type_obj many-to-many field.
+                    # Make sure the player_type_obj is saved first.
+                    obj.starting_skills.add(skill_obj)
 
-            obj.starting_skills.set(starting_skills_objs)
-            obj.save()
 
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Added player type: {pt['name']}"))

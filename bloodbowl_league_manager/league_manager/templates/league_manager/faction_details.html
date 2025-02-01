@@ -34,10 +34,11 @@
                 <td>{{ type.strength }}</td>
                 <td>{{ type.agility }}</td>
                 <td>{{ type.armour }}</td>
-                <td>{{ type.starting_skills }}</td>
+                <td>{% for skill in type.starting_skills %}{{skill}}{% endfor %}
+                    {{ type.starting_skills }}</td>
                 <td>
                     {% if type.normal_skill_access %}
-                        <!a href="{% url 'skills_overview' %}?{% for skill in type.normal_skill_access %}category={{ skill }}&{% endfor %}">
+                        <a href="{% url 'skills_overview' %}?{% for skill in type.normal_skill_access %}category={{ skill }}&{% endfor %}">
                             {{ type.normal_skill_access|join:"" }}
                         </a>
                     {% endif %}
