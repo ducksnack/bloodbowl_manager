@@ -11,9 +11,9 @@
 
 {% for faction in factions %}
     <a href="{% url 'faction_details' faction.faction_name %}">
-        <div>
-            <img src="{% static faction.icon_path %}" alt="{{ faction.faction_name }} icon" />
-            <span>{{ faction.faction_name }}</span>
+        <div class="p-4 bg-white rounded-lg shadow-md hover:shadow-xl transition duration-300 flex flex-col items-center">
+            <img src="{% static faction.icon_path %}" alt="{{ faction.faction_name }} icon" class="w-24 h-24 mb-3 transition-transform group-hover:scale-105"/>
+            <span class="text-lg font-medium text-gray-800 group-hover:text-blue-600">{{ faction.faction_name }}</span>
         </div>
     </a>
 
