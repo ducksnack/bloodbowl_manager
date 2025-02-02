@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Faction, Skill, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp
+from .models import Faction, Skill, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp, Skill
 from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm, LeagueForm
 from django.db.models import Count, Q, F
 
@@ -115,6 +115,69 @@ def modify_player(request, player_id):
 
 def add_level_up(request, player_id):
 
+    STAT_INCREASES = {
+    '+MA': 'movement',
+    '+ST': 'strength',
+    '+AG': 'agility',
+    '+AV': 'armour',
+    }
+    
+    player = get_object_or_404(Player, id=player_id)
+    allowed_categories = set(player.normal_skill_access) | set(player.double_skill_access)
+
+    # Get all available skills based on allowed categories
+
+    skills_by_group = {}
+    if "G" in allowed_categories:
+        skills_by_group["General"] = Skill.objects.filter(category="General")
+    if "A" in allowed_categories:
+        skills_by_group["Agility"] = Skill.objects.filter(category="Agility")
+    if "S" in allowed_categories:
+        skills_by_group["Strength"] = Skill.objects.filter(category="Strength")
+    if "P" in allowed_categories:
+        skills_by_group["Passing"] = Skill.objects.filter(category="Passing")
+    if "M" in allowed_categories:
+        skills_by_group["Mutation"] = Skill.objects.filter(category="Mutation")
+
+    if request.method == 'POST':
+        selected_option = request.POST.get('level_up')
+
+        # Check if the selected option is a skill
+        skill = Skill.objects.filter(name=selected_option).first()
+        if skill:
+            player.skills.add(skill)
+            if skill.category[0] in player.normal_skill_access:
+                value = 20
+            elif skill.category[0] in player.double_skill_access:
+                value = 30
+        
+        # Handle stat increases
+        elif selected_option in STAT_INCREASES:
+            stat_field = STAT_INCREASES[selected_option]
+            setattr(player, stat_field, getattr(player, stat_field) + 1)
+
+            if selected_option in ["+MA", "+AV"]:
+                value = 30
+            elif selected_option == "+AG":
+                value = 40
+            elif selected_option == "+ST":
+                value = 50
+            
+        player.value += value
+        player.level += 1
+
+        player.save()
+        return redirect('team_details', team_id=player.team.id)  # Redirect after processing
+    
+    context = {
+        'player': player,
+        'skills': skills_by_group,
+        'stat_increases': STAT_INCREASES.keys,  # Display stat increase options
+    }
+    return render(request, 'league_manager/level_up.html', context)
+
+def add_level_up_old(request, player_id):
+
     player = get_object_or_404(Player, id=player_id)
 
     allowed_categories = set(player.normal_skill_access) | set(player.double_skill_access)  # Combine both
@@ -185,6 +248,7 @@ def add_player(request, team_id):
             )
 
             # Initialize stats from PlayerType
+            """
             player.position = player_type.position
             player.value = player_type.price
             player.strength = player_type.strength
@@ -192,6 +256,8 @@ def add_player(request, team_id):
             player.movement = player_type.movement
             player.armour = player_type.armour
             player.skills = player_type.starting_skills
+            """
+            player.set_starting_attributes()
             player.normal_skill_access = player_type.normal_skill_access
             player.double_skill_access = player_type.double_skill_access
             player.save()

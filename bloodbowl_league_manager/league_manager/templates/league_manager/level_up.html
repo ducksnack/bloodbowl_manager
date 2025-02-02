@@ -8,10 +8,15 @@
         {% for category, skills in skills.items %}
             <optgroup label="{{ category }}">
                 {% for skill in skills %}
-                    <option value="{{ skill.id }}">{{ skill.name }}</option>
+                    <option value="{{ skill.name }}">{{ skill }}</option>
                 {% endfor %}
             </optgroup>
         {% endfor %}
+            <optgroup label="Stat Increase">
+                {% for stat in stat_increases %}
+                    <option value="{{ stat }}">{{ stat }}</option>
+                {% endfor %}
+            </optgroup>
     </select>
 
     <button type="submit">Add Level</button>

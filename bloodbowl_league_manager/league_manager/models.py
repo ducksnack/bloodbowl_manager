@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from bisect import bisect_right
 
 class League(models.Model):
     name = models.CharField(max_length=100)
@@ -81,7 +82,8 @@ class Player(models.Model):
     strength = models.IntegerField(default=0)
     agility = models.IntegerField(default=0)
     armour = models.IntegerField(default=0)
-    skills = models.CharField(max_length=250, default='None')
+    skills = models.ManyToManyField('Skill', related_name='skill_players')
+    level = models.IntegerField(default=0)
     normal_skill_access = models.CharField(max_length=10, default='None')
     double_skill_access = models.CharField(max_length=10, default='None')
     injuries = models.CharField(max_length=100, default='None')
@@ -91,12 +93,16 @@ class Player(models.Model):
         default='Active',
     )
     miss_next = models.BooleanField(default=False)
-    # injuries = models.CharField(max_length=100, default="")
-    # pass_completions = models.IntegerField(default=0)
-    # touchdowns = models.IntegerField(default=0)
-    # interceptions = models.IntegerField(default=0)
-    # casualties = models.IntegerField(default=0)
-    # mvps = models.IntegerField(default=0)
+
+    def set_starting_attributes(self):
+        self.skills.set(self.player_type.starting_skills.all())
+        print(self.skills.all())
+        self.movement = self.player_type.movement
+        self.strength = self.player_type.strength
+        self.agility = self.player_type.agility
+        self.armour = self.player_type.armour
+        self.value = self.player_type.price
+        self.save()
 
     def get_injuries(self):
         injuries = self.player_injuries.filter(match__status="completed")
@@ -131,10 +137,10 @@ class Player(models.Model):
         return level_ups
 
     def get_stats(self):
-        base_ma = self.player_type.movement
-        base_st = self.player_type.strength
-        base_ag = self.player_type.agility
-        base_av = self.player_type.armour
+        base_ma = self.movement
+        base_st = self.strength
+        base_ag = self.agility
+        base_av = self.armour
         ma_modifier = 0
         st_modifier = 0
         ag_modifier = 0
@@ -146,13 +152,6 @@ class Player(models.Model):
             ag_modifier += injury.injury_type.ag_modifier
             av_modifier += injury.injury_type.av_modifier
 
-        level_ups = self.get_level_ups()
-        for level_up in level_ups:
-            ma_modifier += level_up.level_up_type.ma_modifier
-            st_modifier += level_up.level_up_type.st_modifier
-            ag_modifier += level_up.level_up_type.ag_modifier
-            av_modifier += level_up.level_up_type.av_modifier
-
         ma = base_ma + ma_modifier
         st = base_st + st_modifier
         ag = base_ag + ag_modifier
@@ -160,43 +159,19 @@ class Player(models.Model):
 
         return {"movement":ma, "strength":st, "agility":ag, "armour":av}
     
-    def get_skills(self):
-        skills = self.player_type.starting_skills
-        level_ups = self.get_level_ups()
-        for level_up in level_ups:
-            skill = level_up.level_up_type.skill
-            if skill is not None:
-                skills = skills + ', ' + skill
+    def get_expected_level(self):
+        level_thresholds = [(0, 0), (6, 1), (16, 2), (31, 3)]
 
-        return skills
+        index = bisect_right([threshold[0] for threshold in level_thresholds], self.calculate_spp())
+        return level_thresholds[index - 1][1]
     
-    def get_value(self):
-        total_value = self.player_type.price
-        level_ups = self.get_level_ups()
-        for level_up in level_ups:
-            if level_up.level_up_type.category in self.normal_skill_access:
-                value_increase = 20
-            elif level_up.level_up_type.category in self.double_skill_access:
-                value_increase = 30
-            elif level_up.level_up_type.category in ['+MA', '+AV']:
-                value_increase = 30
-            elif level_up.level_up_type.category == '+AG':
-                value_increase = 40
-            elif level_up.level_up_type.category == '+ST':
-                value_increase = 50
-            
-            total_value += value_increase
-        
-        return total_value
+    def can_level_up(self):
+        if self.get_expected_level() > self.level:
+            return True
+        else:
+            return False
 
 
-    """
-    def save(self, *args, **kwargs):
-        # Ensure the stats are initialized from player_type before saving
-        self.initialize_stats_from_player_type()
-        
-        super().save(*args, **kwargs)
-    """
     def __str__(self):
         return self.name
     

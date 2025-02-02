@@ -44,14 +44,16 @@
                     <td>{{ player.number }}</td>
                     <td>{{ player.name }}</td>
                     <td>{{ player.position }}</td>
-                    <td>{{ player.get_stats.movement }}</td>
-                    <td>{{ player.get_stats.strength }}</td>
-                    <td>{{ player.get_stats.agility }}</td>
-                    <td>{{ player.get_stats.armour }}</td>
-                    <td>{{ player.get_skills }}</td>
+                    {% with player.get_stats as stats %}
+                    <td>{{ stats.movement }}</td>
+                    <td>{{ stats.strength }}</td>
+                    <td>{{ stats.agility }}</td>
+                    <td>{{ stats.armour }}</td>
+                    {% endwith %}
+                    <td>{{ player.skills.all|join:", " }}</td>
                     <td>{{ player.normal_skill_access}}</td>
                     <td>{{ player.double_skill_access }}</td>
-                    <td>{{ player.get_value }}</td>
+                    <td>{{ player.value }}</td>
                     <td>{% if player.miss_next %}Miss{% endif %}</td>
                     <td>{% for injury in player.get_injuries %} {% if injury.injury_type.description != "No long term effect" and injury.injury_type.description != "Miss next game" %} {{ injury.injury_type.name }} [{{ injury.injury_type.description }}] {% endif %} {% endfor %}</td>
                     <td>{{ player.get_n_completions }}</td>
@@ -60,7 +62,7 @@
                     <td>{{ player.get_n_casualties }}</td>
                     <td>{{ player.get_n_mvps }}</td>
                     <td>{{ player.calculate_spp }}</td>
-                    <th><a href="{% url 'modify_player' player.id %}">Modify</a></th>
+                    <th>{% if player.can_level_up %}<a href="{% url 'level_up' player.id %}">Level Up</a>{% else %}<a href="{% url 'modify_player' player.id %}">Modify</a>{% endif %}</th>
                     <td><a href="{% url 'remove_player' player.id %}">Remove</a></td>
                 </tr>
                 {% endfor %}
