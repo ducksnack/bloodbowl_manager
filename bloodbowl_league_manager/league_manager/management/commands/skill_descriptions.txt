@@ -54,6 +54,7 @@ Big Hand (Mutation)
 One of the player’s hands has grown monstrously large, yet remained
 completely functional. The player ignores modifier(s) for enemy tackle
 zones or Pouring Rain weather when he attempts to pick up the ball.
+
 Block (General)
 A player with the Block skill is proficient at knocking opponents down.
 The Block skill, if used, affects the results rolled with the Block dice, as
@@ -145,6 +146,7 @@ add 3 to his Armour roll. This skill may only be used once per turn (e.g.,
 cannot be used with Frenzy or Multiple Block) and if used as part of a
 Blitz Action, the player cannot continue moving after using it. Casualties
 caused by a chainsaw player do not count for Star Player points.
+
 Claw / Claws (Mutation)
 A player with this skill is blessed with a huge crab-like claw or razor
 sharp talons that make armour useless. When an opponent is Knocked
@@ -243,6 +245,7 @@ This player is very skilled at holding off would-be attackers. Opposing
 players may not follow-up blocks made against this player even if the
 Fend player is Knocked Down. The opposing player may still continue
 moving after blocking if he had declared a Blitz Action.
+
 Foul Appearance (Mutation)
 The player’s appearance is so horrible that any opposing player that
 wants to block the player (or use a special attack that takes the place of
@@ -277,6 +280,7 @@ Guard (Strength)
 A player with this skill assists an offensive or defensive block even if he
 is in another player’s tackle zone. This skill may not be used to assist a
 foul.
+
 Hail Mary Pass (Passing)
 The player may throw the ball to any square on the playing pitch, no
 matter what the range: the range ruler is not used. Roll a D6. On a roll of
@@ -290,6 +294,7 @@ be used in a Blizzard or with the Throw Team-Mate skill.
 Horns (Mutation)
 A player with Horns may use them to butt an opponent. Horns adds 1 to
 the player’s Strength for any block(s) he makes during a Blitz Action.
+
 Hypnotic Gaze (Extraordinary)
 The player has a powerful telepathic ability that he can use to stun an
 opponent into immobility. The player may use hypnotic gaze at the end of
@@ -391,13 +396,14 @@ must still be on his feet after the first block.
 Nerves of Steel (Passing)
 The player ignores modifiers for enemy tackle zones when he attempts
 to pass, catch or intercept.
+
 No Hands (Extraordinary)
 The player is unable to pick up, intercept or carry the ball and will fail any
 catch roll automatically, either because he literally has no hands or
 because his hands are full. If he attempts to pick up the ball then it will
 bounce, and will cause a turnover if it is his team’s turn.
 
-Nurgle’s Rot (Extraordinary)
+Nurgle's Rot (Extraordinary)
 This player has a horrible infectious disease which spreads when he kills
 an opponent during a Block, Blitz or Foul Action. Instead of truly dying,
 the infected opponent becomes a new rookie Rotter. To do so, the
@@ -580,6 +586,7 @@ This player is armed with special stakes that are blessed to cause extra
 damage to the Undead and those that work with them. This player may
 add 1 to the Armour roll when they make a Stab attack against any
 player playing for a Khemri, Necromantic, Undead or Vampire team.
+
 Stand Firm (Strength)
 A player with this skill may choose to not be pushed back as the result of
 a block. He may choose to ignore being pushed by ‘Pushed’ results, and
@@ -592,6 +599,7 @@ When a player with this skill blocks an opponent with the ball, applying a
 ‘Pushed’ or ‘Defender Stumbles’ result will cause the opposing player to
 drop the ball in the square that they are pushed to, even if the opposing
 player is not Knocked Down.
+
 Strong Arm (Strength)
 The player may add 1 to the D6 when he passes to Short, Long or Long
 Bomb range.

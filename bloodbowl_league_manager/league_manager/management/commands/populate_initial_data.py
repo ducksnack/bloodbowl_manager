@@ -9,11 +9,11 @@ class Command(BaseCommand):
     help = 'Populate database with initial data for player types, factions, injury types, and level-up types'
     
     def handle(self, *args, **kwargs):
+        self.populate_skills()
         factions = self.populate_factions()
         self.populate_player_types(factions)
         self.populate_injury_types()
         self.populate_level_up_types()
-        self.populate_skills()
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
@@ -23,52 +23,37 @@ class Command(BaseCommand):
         Faction.objects.all().delete()
         self.stdout.write(self.style.WARNING("Cleared all existing factions."))
 
-        factions = [
-            {"name": "Amazon", "reroll": 50, "apo": True},
-            {"name": "Chaos Chosen", "reroll": 60, "apo": True},
-            {"name": "Chaos Dwarf", "reroll": 70, "apo": True},
-            {"name": "Chaos Renegade", "reroll": 70, "apo": True},
-            {"name": "Dark Elf", "reroll": 50, "apo": True},
-            {"name": "Dwarf", "reroll": 50, "apo": True},
-            {"name": "Elven Union", "reroll": 50, "apo": True},
-            {"name": "Goblin", "reroll": 60, "apo": True},
-            {"name": "Halfling", "reroll": 60, "apo": True},
-            {"name": "High Elf", "reroll": 50, "apo": True},
-            {"name": "Human", "reroll": 50, "apo": True},
-            {"name": "Lizardmen", "reroll": 60, "apo": True},
-            {"name": "Necromantic Horror", "reroll": 70, "apo": False},
-            {"name": "Norse", "reroll": 60, "apo": True},
-            {"name": "Nurgle", "reroll": 70, "apo": False},
-            {"name": "Ogre", "reroll": 70, "apo": True},
-            {"name": "Old World Alliance", "reroll": 70, "apo": True},
-            {"name": "Orc", "reroll": 60, "apo": True},
-            {"name": "Shambling Undead", "reroll": 70, "apo": False},
-            {"name": "Skaven", "reroll": 60, "apo": True},
-            {"name": "Slann", "reroll": 50, "apo": True},
-            {"name": "Snotling", "reroll": 50, "apo": True},
-            {"name": "Tomb Kings", "reroll": 70, "apo": False},
-            {"name": "Underworld Denizens", "reroll": 50, "apo": True},
-            {"name": "Vampire", "reroll": 70, "apo": True},
-            {"name": "Wood Elf", "reroll": 50, "apo": True},
-        ]
-
+        # Define the base path for icons
         ICON_BASE_PATH = "league_manager/icons/"
+
+        # Get the directory of the current script (populate_initial_data.py)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct the full file path
+        DATA_FILE = os.path.join(current_dir, "factions.json")
+
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as file:
+                factions = json.load(file)
+        except FileNotFoundError:
+            self.stderr.write(self.style.ERROR("Error: player_types.json file not found."))
+            return
+
         for faction in factions:
             formatted_name = faction["name"].lower().replace(" ", "-")  # Convert to lowercase and replace spaces with hyphens
             faction["icon"] = f"{ICON_BASE_PATH}{formatted_name}.png"
-
-        for faction in factions:
-                obj, created = Faction.objects.get_or_create(
-                    faction_name=faction["name"], 
-                    reroll_value=faction["reroll"], 
-                    apo_available=faction["apo"],
-                    icon_path=faction["icon"]
-                )
-                if created:
-                    self.stdout.write(self.style.SUCCESS(f"Added faction: {faction['name']}"))
-                else:
-                    self.stdout.write(self.style.WARNING(f"Faction already exists: {faction['name']}"))
-        
+            
+            obj, created = Faction.objects.get_or_create(
+                faction_name=faction["name"], 
+                reroll_value=faction["reroll"], 
+                apo_available=faction["apo"],
+                icon_path=faction["icon"]
+            )
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Added faction: {faction['name']}"))
+            else:
+                self.stdout.write(self.style.WARNING(f"Faction already exists: {faction['name']}"))
+    
         return factions
 
     
@@ -138,7 +123,7 @@ class Command(BaseCommand):
                 for skill_name in skill_names:
                     try:
                         # Adjust the lookup field to match your Skill model definition
-                        skill_obj, skill_created = Skill.objects.get_or_create(name=skill_name)
+                        skill_obj = Skill.objects.get(name=skill_name)
                     except Exception as e:
                         print(f"Error retrieving or creating skill '{skill_name}': {e}")
                         continue
@@ -258,6 +243,11 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING(f"Level-up type already exists: {level_up_type['name']}"))
 
     def populate_skills(self):
+
+        # Clear existing data
+        Skill.objects.all().delete()
+        self.stdout.write(self.style.WARNING("Cleared all existing skills."))
+
         # Get the directory of the current script (populate_initial_data.py)
         current_dir = os.path.dirname(os.path.abspath(__file__))
 

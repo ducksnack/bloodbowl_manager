@@ -27,7 +27,7 @@
         <tbody>
             {% for type in player_types %}
             <tr>
-                <td><img src="{% static 'league_manager/icons/faction_postional_icons/' %}{{ type.name|lower }}.png" /></td>
+                <td><img src="{% static type.icon_path %}" /></td>
                 <td> 0 - {{ type.max_quantity }}</td>
                 <td>{{ type.position }}</td>
                 <td>{{ type.movement }}</td>
@@ -36,9 +36,7 @@
                 <td>{{ type.armour }}</td>
                 <td>
                     {% for skill in type.starting_skills.values %}
-                        <span data-bs-toggle="popover" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name }}
-                        {% if not forloop.last %}, {% endif %}
-                        </span>
+                        <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name}}{% if not forloop.last %}, {% endif %}</a>
                     {% endfor %}
                 </td>
                 <td>
@@ -74,6 +72,10 @@
     //Script for enabling popovers
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    const popover = new bootstrap.Popover('.popover-dismiss', {
+      trigger: 'focus'
+    })
+
 </script>
 
 {% endblock %}
