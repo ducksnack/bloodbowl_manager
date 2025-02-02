@@ -2,6 +2,7 @@
 {% block title %}{{ team.name }}{% endblock %}
 
 {% block content %}
+
 <h1>{{ team.name }}</h1>
 
 {% if team.faction %}
@@ -12,7 +13,7 @@
         <table class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
-                    <th colspan="10" class="text-start">{{ team.faction }}</th>
+                    <th colspan="21" class="text-start">{{ team.faction }}</th>
                 </tr>
                 <tr>
                     <th>Number</th>
@@ -25,7 +26,6 @@
                     <th>Skills</th>
                     <th>Normal</th>
                     <th>Double</th>
-                    <th>Value</th>
                     <th>MNG</th>
                     <th>Injuries</th>
                     <th>PC</th>
@@ -34,6 +34,7 @@
                     <th>CAS</th>
                     <th>MVP</th>
                     <th>SPP</th>
+                    <th>Value</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -50,10 +51,25 @@
                     <td>{{ stats.agility }}</td>
                     <td>{{ stats.armour }}</td>
                     {% endwith %}
-                    <td>{{ player.skills.all|join:", " }}</td>
-                    <td>{{ player.normal_skill_access}}</td>
-                    <td>{{ player.double_skill_access }}</td>
-                    <td>{{ player.value }}</td>
+                    <td>
+                        {% for skill in player.skills.values %}
+                            <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name}}{% if not forloop.last %}, {% endif %}</a>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if player.normal_skill_access %}
+                            <a href="{% url 'skills_overview' %}?{% for skill in player.normal_skill_access %}category={{ skill }}&{% endfor %}">
+                                {{ player.normal_skill_access|join:"" }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if player.double_skill_access %}
+                            <a href="{% url 'skills_overview' %}?{% for skill in player.double_skill_access %}category={{ skill }}&{% endfor %}">
+                                {{ player.double_skill_access|join:"" }}
+                            </a>
+                        {% endif %}
+                    </td>
                     <td>{% if player.miss_next %}Miss{% endif %}</td>
                     <td>{% for injury in player.get_injuries %} {% if injury.injury_type.description != "No long term effect" and injury.injury_type.description != "Miss next game" %} {{ injury.injury_type.name }} [{{ injury.injury_type.description }}] {% endif %} {% endfor %}</td>
                     <td>{{ player.get_n_completions }}</td>
@@ -62,45 +78,47 @@
                     <td>{{ player.get_n_casualties }}</td>
                     <td>{{ player.get_n_mvps }}</td>
                     <td>{{ player.calculate_spp }}</td>
+                    <td>{{ player.value }}</td>
                     <th>{% if player.can_level_up %}<a href="{% url 'level_up' player.id %}">Level Up</a>{% else %}<a href="{% url 'modify_player' player.id %}">Modify</a>{% endif %}</th>
                     <td><a href="{% url 'remove_player' player.id %}">Remove</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="10"><strong>Re-Rolls:</strong> {{ team.rerolls }}</td>
-                </tr>
-                <tr>
-                    <td colspan="10"><strong>Apothecary:</strong> {% if team.apothecary %}Yes{% else %}No{% endif %}</td>
-                </tr>
-                <tr>
-                    <td colspan="10"><strong>Assistant Coaches:</strong> {{ team.assistant_coaches }}</td>
-                </tr>
-                <tr>
-                    <td colspan="10"><strong>Cheerleaders:</strong> {{ team.cheerleaders }}</td>
-                </tr>
-                <tr>
-                    <td colspan="10"><strong>Fan Factor:</strong> {{ team.fan_factor }}</td>
-                </tr>
-                <tr>
-                    <td colspan="10"><strong>Treasury:</strong> {{ team.treasury }}</td>
-                </tr>
-                <tr>
-                    <td colspan="10"><strong>Total Team Value:</strong> {{ team.get_total_team_value }}</td>
-                </tr>
-            </tfoot>
         </table>
     </div>
 
     <a href="{% url 'add_player' team_id=team.id %}">Add Player</a>
 
-    <p><a href="{% url 'modify_team' team.id %}">Modify</a></p>
+    <div class="card mt-4">
+        <div class="card-header">
+          Team Details <a href="{% url 'modify_team' team.id %}">Modify</a>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Re-Rolls:</strong> {{ team.rerolls }}</li>
+          <li class="list-group-item"><strong>Apothecary:</strong> {% if team.apothecary %}Yes{% else %}No{% endif %}</li>
+          <li class="list-group-item"><strong>Assistant Coaches:</strong> {{ team.assistant_coaches }}</li>
+          <li class="list-group-item"><strong>Cheerleaders:</strong> {{ team.cheerleaders }}</li>
+          <li class="list-group-item"><strong>Fan Factor:</strong> {{ team.fan_factor }}</li>
+          <li class="list-group-item"><strong>Treasury:</strong> {{ team.treasury }}</li>
+          <li class="list-group-item"><strong>Total Team Value:</strong> {{ team.get_total_team_value }}</li>
+        </ul>
+      </div>
+      <p></p>
 
 {% else %}
     
     <p>{{ team.name }} has no faction. This must be resolved before the team can be viewed.</p>
 
 {% endif %}
-<p><a href="{% url 'teams' %}">Back to Teams</a></p>
+
+<script>
+    //Script for enabling popovers
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    const popover = new bootstrap.Popover('.popover-dismiss', {
+      trigger: 'focus'
+    })
+
+</script>
+
 {% endblock %}
