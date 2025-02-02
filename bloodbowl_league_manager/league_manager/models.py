@@ -101,6 +101,7 @@ class Player(models.Model):
         self.agility = self.player_type.agility
         self.armour = self.player_type.armour
         self.value = self.player_type.price
+        self.position = self.player_type.position
         self.save()
 
     def get_injuries(self):
