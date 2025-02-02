@@ -17,6 +17,13 @@ def get_lowest_available_number(team):
 
 
 def index(request):
+    current_league = League.objects.filter(current=True).first()
+    print(current_league)
+
+    if current_league:
+        league_id = current_league.id
+        return redirect('league_details', league_id=league_id)
+
     return render(request, 'league_manager/index.html')
 
 def teams(request):
