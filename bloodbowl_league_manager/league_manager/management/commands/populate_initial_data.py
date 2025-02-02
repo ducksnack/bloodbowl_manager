@@ -243,37 +243,23 @@ class Command(BaseCommand):
         current_dir = os.path.dirname(os.path.abspath(__file__))
 
         # Construct the full file path
-        skill_file_path = os.path.join(current_dir, "skill_descriptions.txt")
+        DATA_FILE = os.path.join(current_dir, "skills.json")
 
-        # Ensure the file exists before proceeding
-        if not os.path.exists(skill_file_path):
-            print(f"Error: File not found -> {skill_file_path}")
-        else:
-            print(f"Succes: File found -> {skill_file_path}")
-            with open(skill_file_path, "r", encoding="utf-8") as file:
-                content = file.read().strip()  # Read entire file
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as file:
+                skills = json.load(file)
+        except FileNotFoundError:
+            self.stderr.write(self.style.ERROR("Error: skills.json file not found."))
+            return
+        
+        for skill in skills:
+            obj, created = Skill.objects.get_or_create(
+                    name=skill["name"], 
+                    category=skill["category"], 
+                    description=skill["description"]
+            )
 
-            # Split skills by line break (empty line)
-            skills_data = content.split("\n\n")
-
-            for skill_block in skills_data:
-                # Match "Skill Name (Category)" pattern
-                match = re.match(r"(.+?) \((.+?)\)\n(.+)", skill_block, re.DOTALL)
-                if match:
-                    name = match.group(1).strip()  # Skill name before parenthesis
-                    category = match.group(2).strip()  # Category inside parenthesis
-                    description = match.group(3).strip()  # Everything after category
-
-                    # Save to database
-                    obj, created = Skill.objects.get_or_create(
-                        name=name, 
-                        category=category, 
-                        defaults={"description": description}
-                    )
-
-                    if created:
-                        self.stdout.write(self.style.SUCCESS(f"Added skill: {name}"))
-                    else:
-                        self.stdout.write(self.style.WARNING(f"Skill already exists: {name}"))
-
-
+            if created:
+                self.stdout.write(self.style.SUCCESS(f"Added skill: {skill['name']}"))
+            else:
+                self.stdout.write(self.style.WARNING(f"Skill already exists: {skill['name']}")) 
