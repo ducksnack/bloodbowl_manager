@@ -24,7 +24,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING("Cleared all existing factions."))
 
         # Define the base path for icons
-        ICON_BASE_PATH = "league_manager/icons/"
+        ICON_BASE_PATH = "images/icons_factions/"
 
         # Get the directory of the current script (populate_initial_data.py)
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -64,7 +64,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING("Cleared all existing player types."))
 
         # Define the base path for icons
-        ICON_BASE_PATH = "league_manager/icons/faction_postional_icons/"
+        ICON_BASE_PATH = "images/icons_player-types/"
 
         # Mapping skill category abbreviations to full names
         SKILL_CATEGORY_MAP = {
