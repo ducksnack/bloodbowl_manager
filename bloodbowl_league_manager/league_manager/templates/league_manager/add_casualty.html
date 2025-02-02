@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Adding Casualty{% endblock %}
+
+{% block content %}
 <h1>Adding Casualty for {{ team.name }} in match {{ match.id }}</h1>
 
 <form method="POST">
@@ -23,3 +27,4 @@
 
     <button type="submit">Add Casualty</button>
 </form>
+{% endblock %}

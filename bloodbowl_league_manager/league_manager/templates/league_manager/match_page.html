@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Match Information{% endblock %}
+
+{% block content %}
 <h1>{{ team1.name }} vs. {{ team2.name }}</h1>
 <h1>Score: {{ team1_score }} - {{ team2_score }}</h1>
 <h1>FAME: {{ match.team1_fame }} - {{ match.team2_fame }}</h1>
@@ -108,3 +112,5 @@
 {% if in_progress %}
     <p><a href="{% url 'cancel_match' match.id %}">Cancel Match</a></p>
 {% endif %}
+
+{% endblock %}

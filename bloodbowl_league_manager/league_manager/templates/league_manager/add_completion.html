@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Adding Completion{% endblock %}
+
+{% block content %}
 <h1>Adding Completion for {{ team.name }} in match {{ match.id }}</h1>
 
 <form method="POST">
@@ -17,3 +21,4 @@
 
     <button type="submit">Add Completion</button>
 </form>
+{% endblock %}

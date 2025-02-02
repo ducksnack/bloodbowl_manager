@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Adding Touchdown{% endblock %}
+
+{% block content %}
 <h1>Adding Touchdown for {{ team.name }} in match {{ match.id }}</h1>
 
 <form method="POST">
@@ -11,3 +15,4 @@
 
     <button type="submit">Add Touchdown</button>
 </form>
+{% endblock %}

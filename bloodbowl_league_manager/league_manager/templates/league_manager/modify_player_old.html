@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}Modify Player{% endblock %}
+
+{% block content %}
 <h1>Modify Player: {{ player.name }}</h1>
 
 <form method="POST">
@@ -9,3 +13,4 @@
         <button type="button">Cancel</button>
     </a>
 </form>
+{% endblock %}

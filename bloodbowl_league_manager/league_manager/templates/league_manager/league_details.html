@@ -1,3 +1,7 @@
+{% extends "league_manager/base.html" %}
+{% block title %}League {{ league.name }}{% endblock %}
+
+{% block content %}
 <h1>{{ league.name }}</h1>
 <p><strong>Manager:</strong> {{ league.managers }}</p>
 
@@ -92,3 +96,4 @@
         {% endfor %}
     </tbody>
 </table>
+{% endblock %}
