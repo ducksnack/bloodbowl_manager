@@ -13,7 +13,7 @@
                 <th colspan="11" align="left class="text-start">{{ faction }}</th>
             </tr>
             <tr>
-                <th colspan="3" align="left">Positional</th>
+                <th colspan="2" align="left">Positional</th>
                 <th>MA</th>
                 <th>ST</th>
                 <th>AG</th>
@@ -27,7 +27,6 @@
         <tbody>
             {% for type in player_types %}
             <tr>
-                <td><img src="{% static type.icon_path %}" /></td>
                 <td> 0 - {{ type.max_quantity }}</td>
                 <td>{{ type.position }}</td>
                 <td>{{ type.movement }}</td>

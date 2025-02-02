@@ -63,9 +63,6 @@ class Command(BaseCommand):
         PlayerType.objects.all().delete()
         self.stdout.write(self.style.WARNING("Cleared all existing player types."))
 
-        # Define the base path for icons
-        ICON_BASE_PATH = "images/icons_player-types/"
-
         # Mapping skill category abbreviations to full names
         SKILL_CATEGORY_MAP = {
             "G": "General",
@@ -94,11 +91,6 @@ class Command(BaseCommand):
             # Get Faction object
             faction_obj = Faction.objects.get(faction_name=pt["faction"])
         
-            # Append the icon_path to each entry in player_types
-            faction_name = pt["faction"].lower().replace(" ", "-")  # Convert to lowercase, replace spaces
-            position_name = pt["position"].lower().replace(" ", "-")  # Convert position to lowercase, replace spaces
-            pt["icon_path"] = f"{ICON_BASE_PATH}{faction_name}-{position_name}.png"
-
             obj, created = PlayerType.objects.get_or_create(
                 name=pt["name"], 
                 faction=faction_obj, 
@@ -110,8 +102,8 @@ class Command(BaseCommand):
                 agility=pt["agility"], 
                 armour=pt["armour"],
                 normal_skill_access=pt["normal_skill_access"],
-                double_skill_access = pt["double_skill_access"],
-                icon_path=pt["icon_path"])
+                double_skill_access = pt["double_skill_access"]
+                )
             
             starting_skills_str = pt["starting_skills"]
             if starting_skills_str and starting_skills_str != "-":
@@ -131,7 +123,6 @@ class Command(BaseCommand):
                     # Add the skill to the player_type_obj many-to-many field.
                     # Make sure the player_type_obj is saved first.
                     obj.starting_skills.add(skill_obj)
-
 
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Added player type: {pt['name']}"))

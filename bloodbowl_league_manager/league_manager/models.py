@@ -57,7 +57,6 @@ class PlayerType(models.Model):
     armour = models.IntegerField()
     normal_skill_access = models.CharField(max_length=10)
     double_skill_access = models.CharField(max_length=10)
-    icon_path = models.CharField(max_length=255, blank=True)
 
      # Many-to-Many relationships with Skill
     starting_skills = models.ManyToManyField('Skill', related_name='starting_skill_players')
