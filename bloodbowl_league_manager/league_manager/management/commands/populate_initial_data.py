@@ -17,6 +17,10 @@ class Command(BaseCommand):
         self.populate_level_up_types()
         self.import_team_from_csv("A-mice-ing_Critters.csv")
         self.import_team_from_csv("Pyramid_Schemers.csv")
+        self.import_team_from_csv("Leafy_Greens.csv")
+        self.import_team_from_csv("Puny_Humans.csv")
+        self.import_team_from_csv("OK_Øgle.csv")
+        self.import_team_from_csv("The_Lushy_Legends.csv")
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
