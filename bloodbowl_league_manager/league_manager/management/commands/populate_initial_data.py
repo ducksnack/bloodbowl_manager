@@ -26,6 +26,9 @@ class Command(BaseCommand):
         self.import_team_from_csv("OK_Øgle.csv")
         self.import_team_from_csv("The_Lushy_Legends.csv")
         self.recreate_match_history("match1.json")
+        self.recreate_match_history("match2.json")
+        self.recreate_match_history("match3.json")
+        self.recreate_match_history("match4.json")
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
@@ -69,7 +72,7 @@ class Command(BaseCommand):
             team2_winnings=match["match"]["team_2"]["Winnings"],
             team1_fanfactor_change=match["match"]["team_1"]["FF_change"],
             team2_fanfactor_change=match["match"]["team_2"]["FF_change"],
-            status="completed"
+            status=match["match"]["status"]
         )
 
         team1_pass_completions = match["match"]["team_1"]["PC"]
@@ -153,17 +156,19 @@ class Command(BaseCommand):
         team1_mvp = match["match"]["team_1"]["MVP"]
         team2_mvp = match["match"]["team_2"]["MVP"]
 
-        MostValuablePlayer.objects.create(
-            match=created_match,
-            player=Player.objects.get(team=created_match.team1, number=team1_mvp),
-            team=created_match.team1
-        )
+        if team1_mvp > 0:
+            MostValuablePlayer.objects.create(
+                match=created_match,
+                player=Player.objects.get(team=created_match.team1, number=team1_mvp),
+                team=created_match.team1
+            )
 
-        MostValuablePlayer.objects.create(
-            match=created_match,
-            player=Player.objects.get(team=created_match.team2, number=team2_mvp),
-            team=created_match.team2
-        )
+        if team2_mvp > 0:
+            MostValuablePlayer.objects.create(
+                match=created_match,
+                player=Player.objects.get(team=created_match.team2, number=team2_mvp),
+                team=created_match.team2
+            )
 
         if created_match:
             self.stdout.write(self.style.SUCCESS(f"Added match: {created_match.team1.name} - {created_match.team2.name}"))

@@ -1,0 +1,30 @@
+{
+    "match": {
+        "weather": "Nice",
+        "status": "in_progress",
+        "team_1": {
+            "name": "Leafy Greens",
+            "FAME": 1,
+            "PC": [12],
+            "TD": [],
+            "INT": [],
+            "CAS": [3],
+            "MVP": 0,
+            "Score": 0,
+            "Winnings": 0,
+            "FF_change": 0
+        },
+        "team_2": {
+            "name": "A-mice-ing Critters",
+            "FAME": 0,
+            "PC": [],
+            "TD": [6],
+            "INT": [],
+            "CAS": [2],
+            "MVP": 0,
+            "Score": 0,
+            "Winnings": 0,
+            "FF_change": 0
+        }
+    }
+}

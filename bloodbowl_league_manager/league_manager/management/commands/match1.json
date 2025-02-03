@@ -1,6 +1,7 @@
 {
     "match": {
         "weather": "Nice",
+        "status": "completed",
         "team_1": {
             "name": "Leafy Greens",
             "FAME": 1,

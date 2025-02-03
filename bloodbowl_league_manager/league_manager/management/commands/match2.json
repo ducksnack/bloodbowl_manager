@@ -1,0 +1,30 @@
+{
+    "match": {
+        "weather": "Nice",
+        "status": "completed",
+        "team_1": {
+            "name": "Pyramid Schemers",
+            "FAME": 0,
+            "PC": [],
+            "TD": [1],
+            "INT": [],
+            "CAS": [10, 12],
+            "MVP": 8,
+            "Score": 1,
+            "Winnings": 60,
+            "FF_change": 0
+        },
+        "team_2": {
+            "name": "A-mice-ing Critters",
+            "FAME": 1,
+            "PC": [8],
+            "TD": [7, 7],
+            "INT": [],
+            "CAS": [3],
+            "MVP": 11,
+            "Score": 2,
+            "Winnings": 80,
+            "FF_change": 1
+        }
+    }
+}

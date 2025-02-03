@@ -1,0 +1,30 @@
+{
+    "match": {
+        "weather": "Pouring Rain",
+        "status": "in_progress",
+        "team_1": {
+            "name": "Pyramid Schemers",
+            "FAME": 0,
+            "PC": [],
+            "TD": [],
+            "INT": [],
+            "CAS": [],
+            "MVP": 0,
+            "Score": 0,
+            "Winnings": 0,
+            "FF_change": 0
+        },
+        "team_2": {
+            "name": "OK Øgle",
+            "FAME": 2,
+            "PC": [],
+            "TD": [1],
+            "INT": [],
+            "CAS": [],
+            "MVP": 0,
+            "Score": 0,
+            "Winnings": 0,
+            "FF_change": 0
+        }
+    }
+}
