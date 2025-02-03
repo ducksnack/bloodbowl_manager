@@ -7,34 +7,36 @@
 
 <h2>Teams in this league</h2>
 <p><a href="{% url 'leagues' %}">Back to Leagues</a></p>
-<table>
-    <thead>
-        <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Games Won</th>
-            <th>Games Lost</th>
-            <th>Games Drawn</th>
-            <th>Points</th>
-            <th>TDs Scored</th>
-            <th>TDs Against</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for team in team_stats %}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
             <tr>
-                <td>{{ forloop.counter }}</td>
-                <td><a href="{% url 'team_details' team.team_id %}">{{ team.name }}</a></td>
-                <td>{{ team.n_wins }}</td>
-                <td>{{ team.n_lost }}</td>
-                <td>{{ team.n_draws }}</td>
-                <td>{{ team.points }}</td>
-                <td>{{ team.tds_scored }}</td>
-                <td>{{ team.tds_against }}</td>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Games Won</th>
+                <th>Games Lost</th>
+                <th>Games Drawn</th>
+                <th>Points</th>
+                <th>TDs Scored</th>
+                <th>TDs Against</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for team in team_stats %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'team_details' team.team_id %}">{{ team.name }}</a></td>
+                    <td>{{ team.n_wins }}</td>
+                    <td>{{ team.n_lost }}</td>
+                    <td>{{ team.n_draws }}</td>
+                    <td>{{ team.points }}</td>
+                    <td>{{ team.tds_scored }}</td>
+                    <td>{{ team.tds_against }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <p><a href="{% url 'schedule_match' league.id %}">Schedule Match</a></p>
 
