@@ -1,8 +1,9 @@
+import csv
 import json
 import os
 import re
 from django.core.management.base import BaseCommand
-from league_manager.models import PlayerType, Faction, InjuryType, LevelUpType, Skill
+from league_manager.models import Player, PlayerType, Faction, InjuryType, LevelUpType, Skill, Team
 from django.shortcuts import get_object_or_404
 
 class Command(BaseCommand):
@@ -14,6 +15,8 @@ class Command(BaseCommand):
         self.populate_player_types(factions)
         self.populate_injury_types()
         self.populate_level_up_types()
+        self.import_team_from_csv("A-mice-ing_Critters.csv")
+        self.import_team_from_csv("Pyramid_Schemers.csv")
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
@@ -263,3 +266,110 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Added skill: {skill['name']}"))
             else:
                 self.stdout.write(self.style.WARNING(f"Skill already exists: {skill['name']}")) 
+
+    def import_team_from_csv(self, file_path):
+
+        # Get the directory of the current script (populate_initial_data.py)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct the full file path
+        DATA_FILE = os.path.join(current_dir, file_path)
+
+        # Read all rows from the CSV file
+        with open(DATA_FILE, newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile)
+            rows = list(reader)
+
+        # --- Extract Team Info ---
+        team_name = rows[0][3]
+        team_faction_name = rows[1][3]
+        team_coach = rows[1][10]
+
+        # --- Lookup Faction ---
+        faction = Faction.objects.filter(faction_name__iexact=team_faction_name).first()
+        if not faction:
+            print(f"❌ Error: Faction '{team_faction_name}' not found!")
+            return  # Stop if faction doesn’t exist
+
+        # --- Extract Team Assets ---
+        team_rerolls = int(rows[22][3]) if rows[22][3].strip() else 0
+        assistant_coaches = int(rows[22][9]) if rows[22][9].strip() else 0
+        treasury = int(rows[22][13]) if rows[22][13].strip() else 0
+        cheerleaders = int(rows[23][9]) if rows[23][9].strip() else 0
+        apothecary_status = rows[24][3].strip().lower() == "yes"  # True if "yes", False otherwise
+        fan_factor = int(rows[24][9]) if rows[24][9].strip() else 0
+
+        # --- Create the Team ---
+        team = Team.objects.create(
+            name=team_name,
+            faction=faction,
+            coach=team_coach,
+            rerolls=team_rerolls,
+            assistant_coaches=assistant_coaches,
+            treasury=treasury,
+            cheerleaders=cheerleaders,
+            apothecary=apothecary_status,
+            fan_factor=fan_factor
+        )
+
+        print(f"✅ Created Team: {team.name} ({team.faction})")
+
+        # --- Extract Player Info ---
+        header = rows[3]  # The CSV header row
+        header_mapping = {col.strip(): i for i, col in enumerate(header) if col.strip()}
+
+        for row in rows[4:20]:  # Loop over player rows
+            if not any(row) or not row[0].strip().isdigit():
+                continue  # Skip empty rows
+
+            # --- Extract Player Data ---
+            player_number = int(row[header_mapping.get("#", 0)].strip())
+            player_name = row[header_mapping.get("Name", 1)].strip()
+            position = row[header_mapping.get("Position", 5)].strip()
+            movement = int(row[header_mapping.get("MA", 10)].strip())
+            strength = int(row[header_mapping.get("ST", 11)].strip())
+            agility = int(row[header_mapping.get("AG", 12)].strip())
+            armour = int(row[header_mapping.get("AV", 13)].strip())
+            skills_string = row[header_mapping.get("Skills", 14)].strip()
+            skills_list = [s.strip() for s in skills_string.split(",") if s.strip()]
+
+            level = int(row[header_mapping.get("Lvl", 32)].strip()) if row[header_mapping.get("Lvl", 32)].strip() else 0
+            value = int(row[header_mapping.get("Value", 33)].strip()) if row[header_mapping.get("Value", 33)].strip() else 0
+
+            # --- Lookup or Create PlayerType ---
+            player_type = PlayerType.objects.filter(faction=faction, position__iexact=position).first()
+            if not player_type:
+                print(f"❌ Warning: No PlayerType found for {faction} - {position}, skipping player {player_name}.")
+                continue  # Skip player if no PlayerType exists
+
+            # --- Create Player ---
+            player = Player.objects.create(
+                name=player_name,
+                number=player_number,
+                position=position,
+                movement=movement,
+                strength=strength,
+                agility=agility,
+                armour=armour,
+                level=level,
+                value=value,
+                team=team,
+                player_type=player_type,
+                normal_skill_access=player_type.normal_skill_access,
+                double_skill_access=player_type.double_skill_access,
+                injuries="None",
+                status="Active",
+                miss_next=False,
+            )
+
+            # --- Assign Skills ---
+            for skill_name in skills_list:
+                skill = Skill.objects.filter(name__iexact=skill_name).first()
+                if skill:
+                    player.skills.add(skill)
+                else:
+                    print(f"⚠️ Warning: Skill '{skill_name}' not found for player {player_name}.")
+
+            print(f"✅ Created Player: {player.name} ({player.position}) for {team.name}")
+
+        print("✅ Import Complete!")
