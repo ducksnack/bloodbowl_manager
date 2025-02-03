@@ -30,4 +30,5 @@ urlpatterns = [
     path('<int:player_id>/level_up/', views.add_level_up, name="level_up"),
     path('add_injury/<int:match_id>/<int:team_id>/', views.add_injury, name='add_injury'),
     path('factions/', views.factions, name='factions'),
+    path('cheatsheet/', views.cheatsheet, name='cheatsheet')
 ]

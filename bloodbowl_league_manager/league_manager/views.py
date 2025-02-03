@@ -31,10 +31,6 @@ def teams(request):
     return render(request, 'league_manager/teams.html', {'teams': teams})
 
 def factions(request):
-    
-    # factions = Faction.objects.values_list('faction_name', flat=True)  # Query only names
-    # return render(request, "league_manager/factions.html", {"factions_json": json.dumps(list(factions))})
-
     factions = Faction.objects.all()
     return render(request, 'league_manager/factions.html', {'factions':factions})
 
@@ -527,6 +523,9 @@ def cancel_match(request, match_id):
     match.delete()
 
     return redirect('league_details', league_id=match.league.id)
+
+def cheatsheet(request):
+    return render(request, 'league_manager/cheatsheet.html')
 
 
 def match_page(request, match_id):
