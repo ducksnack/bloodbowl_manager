@@ -3,11 +3,14 @@ import json
 import os
 import re
 from django.core.management.base import BaseCommand
-from league_manager.models import Player, PlayerType, Faction, InjuryType, LevelUpType, Skill, Team
+from league_manager.models import League, Player, PlayerType, Faction, InjuryType, LevelUpType, Skill, Team
 from django.shortcuts import get_object_or_404
 
 class Command(BaseCommand):
     help = 'Populate database with initial data for player types, factions, injury types, and level-up types'
+    
+    #Hardcoded league name, for creating our current league. Placed here so it is easy to change
+    league_name = "Horsens Noob-League"
     
     def handle(self, *args, **kwargs):
         self.populate_skills()
@@ -15,6 +18,7 @@ class Command(BaseCommand):
         self.populate_player_types(factions)
         self.populate_injury_types()
         self.populate_level_up_types()
+        self.create_our_league()
         self.import_team_from_csv("A-mice-ing_Critters.csv")
         self.import_team_from_csv("Pyramid_Schemers.csv")
         self.import_team_from_csv("Leafy_Greens.csv")
@@ -23,6 +27,19 @@ class Command(BaseCommand):
         self.import_team_from_csv("The_Lushy_Legends.csv")
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
+
+    def create_our_league(self):
+        League.objects.all().delete()
+        created = League.objects.create(
+                name=self.league_name, 
+                managers="Michael", 
+                current = True
+            )
+        
+        if created:
+            self.stdout.write(self.style.SUCCESS(f"Added league: {created.name}"))
+        else:
+            self.stdout.write(self.style.WARNING(f"League was not created: {created.name}"))
 
     def populate_factions(self):
 
@@ -294,6 +311,9 @@ class Command(BaseCommand):
         if not faction:
             print(f"❌ Error: Faction '{team_faction_name}' not found!")
             return  # Stop if faction doesn’t exist
+        
+        # --- Lookup League ---
+        league = League.objects.filter(name__iexact=self.league_name).first()
 
         # --- Extract Team Assets ---
         team_rerolls = int(rows[22][3]) if rows[22][3].strip() else 0
@@ -313,7 +333,8 @@ class Command(BaseCommand):
             treasury=treasury,
             cheerleaders=cheerleaders,
             apothecary=apothecary_status,
-            fan_factor=fan_factor
+            fan_factor=fan_factor,
+            league=league
         )
 
         print(f"✅ Created Team: {team.name} ({team.faction})")
