@@ -1,0 +1,29 @@
+{
+    "match": {
+        "weather": "Nice",
+        "team_1": {
+            "name": "Leafy Greens",
+            "FAME": 1,
+            "PC": [12],
+            "TD": [2, 12, 11],
+            "INT": [],
+            "CAS": [12, 2],
+            "MVP": 1,
+            "Score": 3,
+            "Winnings": 60,
+            "FF_change": 1
+        },
+        "team_2": {
+            "name": "Pyramid Schemers",
+            "FAME": 0,
+            "PC": [],
+            "TD": [1],
+            "INT": [1],
+            "CAS": [8],
+            "MVP": 7,
+            "Score": 1,
+            "Winnings": 60,
+            "FF_change": 0
+        }
+    }
+}

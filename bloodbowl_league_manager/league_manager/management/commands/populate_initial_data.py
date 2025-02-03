@@ -3,7 +3,7 @@ import json
 import os
 import re
 from django.core.management.base import BaseCommand
-from league_manager.models import League, Player, PlayerType, Faction, InjuryType, LevelUpType, Skill, Team
+from league_manager.models import Casualty, Interception, League, Match, MostValuablePlayer, PassCompletion, Player, PlayerType, Faction, InjuryType, LevelUpType, Skill, Team, Touchdown
 from django.shortcuts import get_object_or_404
 
 class Command(BaseCommand):
@@ -25,6 +25,7 @@ class Command(BaseCommand):
         self.import_team_from_csv("Puny_Humans.csv")
         self.import_team_from_csv("OK_Øgle.csv")
         self.import_team_from_csv("The_Lushy_Legends.csv")
+        self.recreate_match_history("match1.json")
 
         self.stdout.write(self.style.SUCCESS("All initial data populated successfully!"))
 
@@ -40,6 +41,134 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Added league: {created.name}"))
         else:
             self.stdout.write(self.style.WARNING(f"League was not created: {created.name}"))
+
+    def recreate_match_history(self, match):
+        
+        # Get the directory of the current script (populate_initial_data.py)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct the full file path
+        DATA_FILE = os.path.join(current_dir, match)
+
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as file:
+                match = json.load(file)
+
+        except FileNotFoundError:
+            self.stderr.write(self.style.ERROR("Error: skills.json file not found."))
+            return
+
+        created_match = Match.objects.create(
+            league = League.objects.get(name=self.league_name),
+            team1 = Team.objects.get(name=match["match"]["team_1"]["name"]),
+            team2 = Team.objects.get(name=match["match"]["team_2"]["name"]),
+            team1_fame=match["match"]["team_1"]["FAME"],
+            team2_fame=match["match"]["team_2"]["FAME"],
+            weather=match["match"]["weather"],
+            team1_winnings=match["match"]["team_1"]["Winnings"],
+            team2_winnings=match["match"]["team_2"]["Winnings"],
+            team1_fanfactor_change=match["match"]["team_1"]["FF_change"],
+            team2_fanfactor_change=match["match"]["team_2"]["FF_change"],
+            status="Completed"
+        )
+
+        team1_pass_completions = match["match"]["team_1"]["PC"]
+        team2_pass_completions = match["match"]["team_2"]["PC"]
+
+        for pc in team1_pass_completions:
+            PassCompletion.objects.create(
+                match=created_match,
+                thrower=Player.objects.get(team=created_match.team1, number=pc),
+                receiver=Player.objects.get(team=created_match.team1, number=pc), #Throws to himself for now, since we dont have this tracked in our historic data
+                team=created_match.team1
+            )
+
+        for pc in team2_pass_completions:
+            PassCompletion.objects.create(
+                match=created_match,
+                thrower=Player.objects.get(team=created_match.team2, number=pc),
+                receiver=Player.objects.get(team=created_match.team2, number=pc), #Throws to himself for now, since we dont have this tracked in our historic data
+                team=created_match.team2
+            )
+
+        team1_touchdowns = match["match"]["team_1"]["TD"]
+        team2_touchdowns = match["match"]["team_2"]["TD"]
+
+        for td in team1_touchdowns:
+            Touchdown.objects.create(
+                match=created_match,
+                player=Player.objects.get(team=created_match.team1, number=td),
+                team=created_match.team1
+            )
+
+        for td in team2_touchdowns:
+            Touchdown.objects.create(
+                match=created_match,
+                player=Player.objects.get(team=created_match.team2, number=td),
+                team=created_match.team2
+            )
+
+        team1_interceptions = match["match"]["team_1"]["INT"]
+        team2_interceptions = match["match"]["team_2"]["INT"]
+
+        for int in team1_interceptions:
+            Interception.objects.create(
+                match=created_match,
+                intercepting_player=Player.objects.get(team=created_match.team1, number=int),
+                throwing_player=Player.objects.get(team=created_match.team1, number=int), #Intercepts himself for now, since we dont have this tracked in our historic data
+                intercepting_team=created_match.team1,
+                throwing_team=created_match.team2
+            )
+
+        for int in team2_interceptions:
+            Interception.objects.create(
+                match=created_match,
+                intercepting_player=Player.objects.get(team=created_match.team2, number=int),
+                throwing_player=Player.objects.get(team=created_match.team2, number=int), #Intercepts himself for now, since we dont have this tracked in our historic data
+                intercepting_team=created_match.team2,
+                throwing_team=created_match.team1
+            )
+
+        team1_casualties = match["match"]["team_1"]["CAS"]
+        team2_casualties = match["match"]["team_2"]["CAS"]
+        
+        for cas in team1_casualties:
+            Casualty.objects.create(
+                match=created_match,
+                causing_player=Player.objects.get(team=created_match.team1, number=cas),
+                victim_player=Player.objects.get(team=created_match.team1, number=cas), #Casualties himself for now, since we dont have this tracked in our historic data
+                causing_team=created_match.team1,
+                victim_team=created_match.team2
+            )
+
+        for cas in team2_casualties:
+            Casualty.objects.create(
+                match=created_match,
+                causing_player=Player.objects.get(team=created_match.team2, number=cas),
+                victim_player=Player.objects.get(team=created_match.team2, number=cas), #Casualties himself for now, since we dont have this tracked in our historic data
+                causing_team=created_match.team2,
+                victim_team=created_match.team1
+            )
+
+        team1_mvp = match["match"]["team_1"]["MVP"]
+        team2_mvp = match["match"]["team_2"]["MVP"]
+
+        MostValuablePlayer.objects.create(
+            match=created_match,
+            player=Player.objects.get(team=created_match.team1, number=team1_mvp),
+            team=created_match.team1
+        )
+
+        MostValuablePlayer.objects.create(
+            match=created_match,
+            player=Player.objects.get(team=created_match.team2, number=team2_mvp),
+            team=created_match.team2
+        )
+
+        if created_match:
+            self.stdout.write(self.style.SUCCESS(f"Added match: {created_match.team1.name} - {created_match.team2.name}"))
+        else:
+            self.stdout.write(self.style.WARNING(f"Could not add match: {created_match.team1.name} - {created_match.team2.name}")) 
 
     def populate_factions(self):
 
