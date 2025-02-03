@@ -69,7 +69,7 @@ class Command(BaseCommand):
             team2_winnings=match["match"]["team_2"]["Winnings"],
             team1_fanfactor_change=match["match"]["team_1"]["FF_change"],
             team2_fanfactor_change=match["match"]["team_2"]["FF_change"],
-            status="Completed"
+            status="completed"
         )
 
         team1_pass_completions = match["match"]["team_1"]["PC"]
