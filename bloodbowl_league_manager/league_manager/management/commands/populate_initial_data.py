@@ -3,7 +3,7 @@ import json
 import os
 import re
 from django.core.management.base import BaseCommand
-from league_manager.models import Casualty, Interception, League, Match, MostValuablePlayer, PassCompletion, Player, PlayerType, Faction, InjuryType, Skill, Team, Touchdown, StatIncrease
+from league_manager.models import Casualty, Interception, League, LevelUp, Match, MostValuablePlayer, PassCompletion, Player, PlayerType, Faction, InjuryType, Skill, Team, Touchdown, StatIncrease
 from django.shortcuts import get_object_or_404
 
 class Command(BaseCommand):
@@ -479,6 +479,38 @@ class Command(BaseCommand):
                     player.skills.add(skill)
                 else:
                     print(f"⚠️ Warning: Skill '{skill_name}' not found for player {player_name}.")
+
+            # --- Check if the Player is leveled up, and create LevelUp object if so
+            if player.level > 1:
+                added_skills = []
+                # --- Find which skill, if any, was selected for level up
+                for skill in player.skills.all():
+                    if skill not in player.player_type.starting_skills.all():
+                        added_skills.append(skill)
+                # --- Do the same for stat increases
+                agility_difference = 0
+                strength_difference = 0
+                movement_difference = 0
+                armour_difference = 0
+                if player.agility > player.player_type.agility:
+                    agility_difference = player.player_type.agility-player.agility
+                if player.strength > player.player_type.strength:
+                    strength_difference = player.player_type.strength-player.strength
+                if player.movement > player.player_type.movement:
+                    movement_difference = player.player_type.movement-player.movement
+                if player.armour > player.player_type.armour:
+                    armour_difference = player.player_type.armour-player.armour
+
+                for skill in added_skills:
+                    LevelUp.objects.create(player=player, skill=skill, stat_increase=None)
+                for increase in range(agility_difference):
+                    StatIncrease.objects.create(ag_modifier = 1)
+                for increase in range(strength_difference):
+                    StatIncrease.objects.create(st_modifier = 1)
+                for increase in range(movement_difference):
+                    StatIncrease.objects.create(ma_modifier = 1)
+                for increase in range(armour_difference):
+                    StatIncrease.objects.create(av_modifier = 1)
 
             print(f"✅ Created Player: {player.name} ({player.position}) for {team.name}")
 
