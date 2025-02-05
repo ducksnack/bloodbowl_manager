@@ -7,7 +7,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <button type="submit">Create League</button>
+    <button type="submit" class="btn btn-primary">Confirm</button>
 </form>
 <a href="{% url 'leagues' %}">Back to Leagues</a>
 {% endblock %}

@@ -7,7 +7,7 @@
 <form method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <button type="submit">Create Team</button>
+    <button type="submit" class="btn btn-primary">Confirm</button>
 </form>
 <a href="{% url 'index' %}">Back to Home</a>
 {% endblock %}
