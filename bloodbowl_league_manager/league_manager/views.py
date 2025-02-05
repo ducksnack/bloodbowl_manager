@@ -104,17 +104,14 @@ def modify_player(request, player_id):
     player = get_object_or_404(Player, id=player_id)
 
     if request.method == 'POST':
-        new_number = request.POST.get('player_number')
-        new_name = request.POST.get('player_name')
+        form = ModifyPlayerForm(request.POST, instance=player)
+        if form.is_valid():
+            form.save()
+            return redirect('team_details', player.team.id)
+    else:
+        form = ModifyPlayerForm(instance=player)
 
-        player.name = new_name
-        player.number = new_number
-
-        player.save()
-
-        return redirect('team_details', player.team.id)
-
-    return render(request, 'league_manager/modify_player.html', {'player': player})
+    return render(request, 'league_manager/modify_player.html', {'form': form, 'player': player})
 
 def add_level_up(request, player_id):
 

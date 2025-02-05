@@ -1,11 +1,12 @@
 {% extends "league_manager/base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Create New League{% endblock %}
 
 {% block content %}
 <h1>Create a New League</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <button type="submit">Create League</button>
 </form>
 <a href="{% url 'leagues' %}">Back to Leagues</a>

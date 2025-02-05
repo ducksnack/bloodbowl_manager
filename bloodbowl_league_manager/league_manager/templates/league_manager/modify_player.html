@@ -1,4 +1,5 @@
 {% extends "league_manager/base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Modify Player{% endblock %}
 
 {% block content %}
@@ -6,20 +7,10 @@
 
 <form method="POST">
     {% csrf_token %}
-
-    <!-- Player Name Input -->
-    <label for="player_name">Name:</label>
-    <input type="text" id="name_id" name="player_name" value="{{ player.name }}" required>
-    <br>
-
-    <!-- Player Number Input -->
-    <label for="player_number">Number:</label>
-    <input type="number" id="number_id" name="player_number" min="1" value="{{ player.number }}" required>
-    <br>
-
-    <button type="submit">Confirm</button>
+    {{ form|crispy }}   
+    <button type="submit" class="btn btn-primary">Save Changes</button>
     <a href="{% url 'team_details' team_id=player.team.id %}">
-        <button type="button">Cancel</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>
     </a>
 </form>
 
