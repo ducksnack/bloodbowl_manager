@@ -114,13 +114,6 @@ def modify_player(request, player_id):
     return render(request, 'league_manager/modify_player.html', {'form': form, 'player': player})
 
 def add_level_up(request, player_id):
-
-    STAT_INCREASES = {
-    '+MA': 'movement',
-    '+ST': 'strength',
-    '+AG': 'agility',
-    '+AV': 'armour',
-    }
     
     player = get_object_or_404(Player, id=player_id)
     allowed_categories = set(player.normal_skill_access) | set(player.double_skill_access)
@@ -155,7 +148,6 @@ def add_level_up(request, player_id):
     context = {
         'player': player,
         'skills': skills_by_group,
-        'stat_increases': STAT_INCREASES.keys,  # Display stat increase options
     }
     return render(request, 'league_manager/level_up.html', context)
 

@@ -14,7 +14,7 @@ class TeamForm(forms.ModelForm):
 class ModifyPlayerForm(forms.ModelForm):
     class Meta:
         model = Player
-        fields = ['name', 'number', 'value']
+        fields = ['name', 'number']
 
 class AddPlayerForm(forms.Form):
     name = forms.CharField(max_length=100, label='Player Name')
