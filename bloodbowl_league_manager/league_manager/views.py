@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Faction, Skill, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUpType, LevelUp, Skill
+from .models import Faction, Skill, Team, Player, PlayerType, League, Match, Touchdown, PassCompletion, Casualty, Interception, MostValuablePlayer, InjuryType, Injury, LevelUp, Skill, StatIncrease
 from .forms import TeamForm, ModifyPlayerForm, AddPlayerForm, ModifyTeamForm, LeagueForm
 from django.db.models import Count, Q, F
 
@@ -142,6 +142,52 @@ def add_level_up(request, player_id):
     if "M" in allowed_categories:
         skills_by_group["Mutation"] = Skill.objects.filter(category="Mutation")
 
+    skills_by_group["Stat Increase"] = StatIncrease.objects.all()
+
+    if request.method == 'POST':
+        selected_option = request.POST.get('level_up')
+
+        # Check if the selected option is a skill
+        skill = Skill.objects.filter(name=selected_option).first()
+        stat_increase = StatIncrease.objects.filter(name=selected_option).first()
+        level_number = player.get_level()+1
+        LevelUp.objects.create(player=player, level_number=level_number, skill=skill, stat_increase=stat_increase)
+        
+        return redirect('team_details', team_id=player.team.id)  # Redirect after processing
+    
+    context = {
+        'player': player,
+        'skills': skills_by_group,
+        'stat_increases': STAT_INCREASES.keys,  # Display stat increase options
+    }
+    return render(request, 'league_manager/level_up.html', context)
+
+def add_level_up_old(request, player_id):
+
+    STAT_INCREASES = {
+    '+MA': 'movement',
+    '+ST': 'strength',
+    '+AG': 'agility',
+    '+AV': 'armour',
+    }
+    
+    player = get_object_or_404(Player, id=player_id)
+    allowed_categories = set(player.normal_skill_access) | set(player.double_skill_access)
+
+    # Get all available skills based on allowed categories
+
+    skills_by_group = {}
+    if "G" in allowed_categories:
+        skills_by_group["General"] = Skill.objects.filter(category="General")
+    if "A" in allowed_categories:
+        skills_by_group["Agility"] = Skill.objects.filter(category="Agility")
+    if "S" in allowed_categories:
+        skills_by_group["Strength"] = Skill.objects.filter(category="Strength")
+    if "P" in allowed_categories:
+        skills_by_group["Passing"] = Skill.objects.filter(category="Passing")
+    if "M" in allowed_categories:
+        skills_by_group["Mutation"] = Skill.objects.filter(category="Mutation")
+
     if request.method == 'POST':
         selected_option = request.POST.get('level_up')
 
@@ -178,46 +224,6 @@ def add_level_up(request, player_id):
         'stat_increases': STAT_INCREASES.keys,  # Display stat increase options
     }
     return render(request, 'league_manager/level_up.html', context)
-
-def add_level_up_old(request, player_id):
-
-    player = get_object_or_404(Player, id=player_id)
-
-    allowed_categories = set(player.normal_skill_access) | set(player.double_skill_access)  # Combine both
-
-    allowed_categories.add("stat_increase")
-    print(allowed_categories)
-    skills_by_group = {}
-
-    if "G" in allowed_categories:
-        skills_by_group["General"] = LevelUpType.objects.filter(category="G")
-    if "A" in allowed_categories:
-        skills_by_group["Agility"] = LevelUpType.objects.filter(category="A")
-    if "S" in allowed_categories:
-        skills_by_group["Strength"] = LevelUpType.objects.filter(category="S")
-    if "P" in allowed_categories:
-        skills_by_group["Passing"] = LevelUpType.objects.filter(category="P")
-    if "M" in allowed_categories:
-        skills_by_group["Mutation"] = LevelUpType.objects.filter(category="M")
-    if "stat_increase" in allowed_categories:
-        skills_by_group["Stat Increase"] = LevelUpType.objects.filter(category__in=["+MA", "+ST", "+AG", "+AV"])
-
-
-    if request.method == "POST":
-        level_up_id = request.POST.get('level_up')
-        level_up = get_object_or_404(LevelUpType, id=level_up_id)
-
-        LevelUp.objects.create(player=player, level_up_type=level_up)
-
-        return redirect('team_details', team_id=player.team.id)
-    
-    context = {
-        'player':player,
-        'skills':skills_by_group,
-    }
-
-    return render(request, "league_manager/level_up.html", context)
-
 
 def modify_player_old(request, player_id):
     player = get_object_or_404(Player, id=player_id)

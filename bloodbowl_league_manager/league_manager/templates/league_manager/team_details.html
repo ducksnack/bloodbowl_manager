@@ -51,7 +51,7 @@
                     <td>{{ stats.armour }}</td>
                     {% endwith %}
                     <td>
-                        {% for skill in player.skills.values %}
+                        {% for skill in player.get_skill_list.values %}
                             <a tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-title="{{ skill.name }}" data-bs-content="{{ skill.description }}">{{ skill.name}}{% if not forloop.last %}, {% endif %}</a>
                         {% endfor %}
                     </td>
@@ -77,7 +77,7 @@
                     <td>{{ player.get_n_casualties }}</td>
                     <td>{{ player.get_n_mvps }}</td>
                     <td>{{ player.calculate_spp }}</td>
-                    <td>{{ player.value }}</td>
+                    <td>{{ player.get_value }}</td>
                     <th>{% if player.can_level_up %}<a href="{% url 'level_up' player.id %}">Level Up</a>{% else %}<a href="{% url 'modify_player' player.id %}">Modify</a>{% endif %}</th>
                     <td><a href="{% url 'remove_player' player.id %}">Remove</a></td>
                 </tr>

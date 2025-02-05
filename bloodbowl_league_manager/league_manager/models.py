@@ -96,7 +96,6 @@ class Player(models.Model):
 
     def set_starting_attributes(self):
         self.skills.set(self.player_type.starting_skills.all())
-        print(self.skills.all())
         self.movement = self.player_type.movement
         self.strength = self.player_type.strength
         self.agility = self.player_type.agility
@@ -137,6 +136,12 @@ class Player(models.Model):
         level_ups = self.level_ups.all()
         return level_ups
 
+    def get_stat_increases(self):
+        return StatIncrease.objects.filter(levelup__player=self)
+
+    def get_gained_skills(self):
+        return Skill.objects.filter(levelup__player=self)
+
     def get_stats(self):
         base_ma = self.movement
         base_st = self.strength
@@ -146,6 +151,12 @@ class Player(models.Model):
         st_modifier = 0
         ag_modifier = 0
         av_modifier = 0
+        stat_increases = self.get_stat_increases()
+        for stat_increase in stat_increases:
+            ma_modifier += stat_increase.ma_modifier
+            st_modifier += stat_increase.st_modifier
+            ag_modifier += stat_increase.ag_modifier
+            av_modifier += stat_increase.av_modifier
         injuries = self.get_injuries()
         for injury in injuries:
             ma_modifier += injury.injury_type.ma_modifier
@@ -160,14 +171,41 @@ class Player(models.Model):
 
         return {"movement":ma, "strength":st, "agility":ag, "armour":av}
     
+    def get_skill_list(self):
+        return self.skills.all() | self.get_gained_skills()
+    
+    def get_value(self):
+        skill_dict = {
+            'General':'G',
+            'Agility':'A',
+            'Strength':'S',
+            'Passing':'P',
+            'Mutation':'M',
+        }
+
+        value = self.value
+        gained_skills = self.get_gained_skills()
+        for skill in gained_skills:
+            if skill_dict[skill.category] in self.normal_skill_access:
+                value +=20
+            if skill_dict[skill.category] in self.double_skill_access:
+                value +=30
+        stat_increases = self.get_stat_increases()
+        for stat_increase in stat_increases:
+            value += stat_increase.value
+        return value
+
     def get_expected_level(self):
         level_thresholds = [(0, 0), (6, 1), (16, 2), (31, 3)]
 
         index = bisect_right([threshold[0] for threshold in level_thresholds], self.calculate_spp())
         return level_thresholds[index - 1][1]
     
+    def get_level(self):
+        return self.level_ups.count()
+    
     def can_level_up(self):
-        if self.get_expected_level() > self.level:
+        if self.get_expected_level() > self.get_level():
             return True
         else:
             return False
@@ -292,25 +330,6 @@ class Injury(models.Model):
     def __str__(self):
         return f'{self.player} ({self.player.team}), {self.injury_type}'
 
-class LevelUpType(models.Model):
-    name = models.CharField(max_length=25)
-    ma_modifier = models.IntegerField(default=0)
-    st_modifier = models.IntegerField(default=0)
-    ag_modifier = models.IntegerField(default=0)
-    av_modifier = models.IntegerField(default=0)
-    skill = models.CharField(max_length=20, blank=True, null=True, default=None)
-    category = models.CharField(max_length=20, default="")
-
-    def __str__(self):
-        return self.name
-
-class LevelUp(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="level_ups")
-    level_up_type = models.ForeignKey(LevelUpType, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.player} ({self.player.team}), {self.level_up_type}'
-
 class Skill(models.Model):
     name = models.CharField(max_length=100, unique=True)
     category = models.CharField(max_length=20, default="")
@@ -319,3 +338,28 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.name
+
+class StatIncrease(models.Model):
+    name = models.CharField(max_length=25, default="stat_increase")
+    value = models.IntegerField(default=0)
+    ma_modifier = models.IntegerField(default=0)
+    st_modifier = models.IntegerField(default=0)
+    ag_modifier = models.IntegerField(default=0)
+    av_modifier = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+    
+class LevelUp(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='level_ups')
+    level_number = models.IntegerField(default=0)
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    stat_increase = models.ForeignKey(StatIncrease, on_delete=models.CASCADE, blank=True, null=True, default=None)
+
+    def __str__(self):
+        if self.skill:
+            return f'{self.player}: {self.skill}'
+        elif self.stat_increase:
+            return f'{self.player}: {self.stat_increase}'
+        else:
+            return f'{self.player}: level up'
