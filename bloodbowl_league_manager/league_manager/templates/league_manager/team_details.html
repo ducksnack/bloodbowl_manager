@@ -1,4 +1,9 @@
 {% extends "league_manager/base.html" %}
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+{% endblock %}
 {% block title %}{{ team.name }}{% endblock %}
 
 {% block content %}
@@ -9,7 +14,7 @@
     <p><strong>Current League:</strong> {% if team.league %} <a href="{% url 'league_details' team.league.id %}">{{ team.league }}</a> (<a href="{% url 'join_league' team.id %}">Drop from League</a>) {% else %} None (<a href="{% url 'join_league' team.id %}">Register in a League</a>){% endif %}</p>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table id="sortableTable" class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
                     <th colspan="21" class="text-start">{{ team.faction }}</th>
@@ -112,12 +117,26 @@
 
 <script>
     //Script for enabling popovers
-    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-    const popover = new bootstrap.Popover('.popover-dismiss', {
-      trigger: 'focus'
+    document.addEventListener("DOMContentLoaded", function () {
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        popoverTriggerList.forEach(popoverTriggerEl => {
+            new bootstrap.Popover(popoverTriggerEl, {
+                trigger: 'focus' // Ensures popovers close when clicking elsewhere
+            });
+        });
     })
 
+    $(document).ready(function () {
+        $('#sortableTable').DataTable({
+            "paging": false,   // Disable pagination
+            "info": false,     // Disable table info
+            "order": [],       // Prevent auto sorting
+            "columnDefs": [
+                { "orderable": false, "targets": [7, 8, 9, 10, 11, 19, 20] }  // Disable sorting on action and skill columns
+            ]
+        });
+    });
+    
 </script>
 
 {% endblock %}

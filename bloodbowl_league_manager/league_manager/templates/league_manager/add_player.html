@@ -1,4 +1,5 @@
 {% extends "league_manager/base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Add Player{% endblock %}
 
 {% block content %}
@@ -6,11 +7,11 @@
 
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
 
-    <button type="submit">Confirm</button>
+    <button type="submit" class="btn btn-primary">Confirm</button>
     <a href="{% url 'team_details' team_id=team.id %}">
-        <button type="button">Cancel</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>
     </a>
 </form>
 {% endblock %}
