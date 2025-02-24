@@ -1,23 +1,30 @@
 {% extends "league_manager/base.html" %}
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+{% endblock %}
 {% block title %}Teams{% endblock %}
 
 {% block content %}
-<h1>Teams</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Coach</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for team in teams %}
-        <tr>
-            <td><a href="{% url 'team_details' team.id %}">{{ team.name }}</a></td>
-            <td>{{ team.coach }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <h1>Teams</h1>
+    <table id="sortableTable" class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Coach</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td><a href="{% url 'team_details' team.id %}">{{ team.name }}</a></td>
+                <td>{{ team.coach }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 <p><a href="{% url 'index' %}">Back to Home</a></p>
 {% endblock %}

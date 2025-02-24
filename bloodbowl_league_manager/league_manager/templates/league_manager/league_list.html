@@ -2,23 +2,25 @@
 {% block title %}Leagues{% endblock %}
 
 {% block content %}
-<h1>Leagues</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Manager</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for league in leagues %}
+<div class="table-responsive">
+    <h1>Leagues</h1>
+    <table id="sortableTable" class="table table-bordered table-striped">
+        <thead class="table-light">
             <tr>
-                <td><a href="{% url 'league_details' league.id %}">{{ league.name }}</a></td>
-                <td>{{ league.managers }}</td>
+                <th>Name</th>
+                <th>Manager</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for league in leagues %}
+                <tr>
+                    <td><a href="{% url 'league_details' league.id %}">{{ league.name }}</a></td>
+                    <td>{{ league.managers }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 <p><a href="{% url 'create_league' %}">Create New League</a></p>
 
